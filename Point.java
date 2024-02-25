@@ -1,6 +1,10 @@
 /**
  * Represents a point in a two-dimensional space with a name identifier.
- * This class is immutable, meaning once an instance is created, its state cannot be changed.
+ * This class is immutable, meaning once an instance is created, its state
+ * cannot be changed.
+ * 
+ * @author kinjalpandey, architg03
+ * @version 02/25/24
  */
 public class Point {
     /**
@@ -19,17 +23,22 @@ public class Point {
     private final int y;
 
     /**
-     * Constructs a new Point with the specified name, x-coordinate, and y-coordinate.
+     * Constructs a new Point with the specified name, x-coordinate, and
+     * y-coordinate.
      *
-     * @param name The name identifier for the point.
-     * @param x    The x-coordinate of the point.
-     * @param y    The y-coordinate of the point.
+     * @param name
+     *            The name identifier for the point.
+     * @param x
+     *            The x-coordinate of the point.
+     * @param y
+     *            The y-coordinate of the point.
      */
     public Point(String name, int x, int y) {
         this.name = name;
         this.x = x;
         this.y = y;
     }
+
 
     /**
      * Returns the name of the point.
@@ -40,6 +49,7 @@ public class Point {
         return name;
     }
 
+
     /**
      * Returns the x-coordinate of the point.
      *
@@ -49,6 +59,7 @@ public class Point {
         return x;
     }
 
+
     /**
      * Returns the y-coordinate of the point.
      *
@@ -57,6 +68,7 @@ public class Point {
     public int getY() {
         return y;
     }
+
 
     /**
      * Returns a string representation of the point in the format "name (x, y)".
