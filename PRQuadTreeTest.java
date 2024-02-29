@@ -13,7 +13,6 @@ public class PRQuadTreeTest extends TestCase {
 
     private PRQuadTree quadTree;
     private Point point1;
-    private Point point2;
     private Point point3;
 
     /**
@@ -25,7 +24,7 @@ public class PRQuadTreeTest extends TestCase {
 
         // Initialize points within the boundary
         point1 = new Point("TestPoint1", 100, 100);
-        point2 = new Point("TestPoint2", 200, 200);
+        new Point("TestPoint2", 200, 200);
         point3 = new Point("TestPoint1", 300, 300); // Same name as point1,
                                                     // different coordinates
     }

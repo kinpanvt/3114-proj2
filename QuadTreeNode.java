@@ -106,4 +106,9 @@ public abstract class QuadTreeNode {
         int nodeY,
         int nodeSize);
 
+    /**
+     * dump
+     * @param level lvl
+     */
+    public abstract void dump(int level);
 }

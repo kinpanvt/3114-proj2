@@ -327,4 +327,25 @@ public class InternalNode extends QuadTreeNode {
         return parSE;
 
     }
+
+
+    /**
+     * Dump Method
+     * 
+     * @param level
+     *            lvl
+     */
+    public void dump(int level) {
+        System.out.println(indent(level) + "InternalNode");
+        nw.dump(level + 1);
+        ne.dump(level + 1);
+        sw.dump(level + 1);
+        se.dump(level + 1);
+    }
+
+
+    // Helper method for indentation
+    private String indent(int level) {
+        return " ".repeat(level * 2);
+    }
 }

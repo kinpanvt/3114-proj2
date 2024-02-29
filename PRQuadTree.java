@@ -1,4 +1,7 @@
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a Point Region Quadtree for managing a collection of points
@@ -91,6 +94,172 @@ public class PRQuadTree {
      */
     public List<Point> searchByName(String name) {
         return root.search(name);
+    }
+
+
+    /**
+     * searchByCoordinates
+     * 
+     * @param x
+     *            coord
+     * @param y
+     *            coord
+     * @return Point
+     */
+    public Point searchByCoordinates(int x, int y) {
+        return searchByCoordinates(root, x, y, 0, 0, size);
+    }
+
+
+    private Point searchByCoordinates(
+        QuadTreeNode node,
+        int x,
+        int y,
+        int startX,
+        int startY,
+        int regionSize) {
+        if (node == null || node instanceof FlyweightNode) {
+            return null; // Node is empty or doesn't contain any points.
+        }
+        else if (node instanceof LeafNode) {
+            // Assuming LeafNode has a method to return its point or null if the
+            // point doesn't match the coordinates
+            Point point = ((LeafNode)node).getPoint(); // Method to get the
+                                                       // point from a leaf node
+            if (point != null && point.getX() == x && point.getY() == y) {
+                return point;
+            }
+            return null;
+        }
+        else if (node instanceof InternalNode) {
+            int halfSize = regionSize / 2;
+            int midX = startX + halfSize;
+            int midY = startY + halfSize;
+
+            // Determine the correct quadrant
+            if (x < midX) {
+                return y < midY
+                    ? searchByCoordinates(((InternalNode)node).getNw(), x, y,
+                        startX, startY, halfSize)
+                    : searchByCoordinates(((InternalNode)node).getSw(), x, y,
+                        startX, midY, halfSize);
+            }
+            else {
+                return y < midY
+                    ? searchByCoordinates(((InternalNode)node).getNe(), x, y,
+                        midX, startY, halfSize)
+                    : searchByCoordinates(((InternalNode)node).getSe(), x, y,
+                        midX, midY, halfSize);
+            }
+        }
+        return null; // Fallback case, should not be reached.
+    }
+
+
+    /**
+     * findDuplicates()
+     * 
+     * @return List<Point> list
+     */
+    public List<Point> findDuplicates() {
+        List<Point> allPoints = new ArrayList<>();
+        collectPoints(root, allPoints); // Collect all points from the quadtree
+        return identifyDuplicates(allPoints); // Identify duplicates among
+                                              // collected points
+    }
+
+
+    private void collectPoints(QuadTreeNode node, List<Point> allPoints) {
+        if (node == null || node instanceof FlyweightNode) {
+            return; // No points to collect in this path
+        }
+        else if (node instanceof LeafNode) {
+            allPoints.add(((LeafNode)node).getPoint()); // Assuming getPoint()
+                                                        // retrieves the point
+                                                        // from a leaf
+        }
+        else if (node instanceof InternalNode) {
+            // Recursively collect points from all children
+            collectPoints(((InternalNode)node).getNw(), allPoints);
+            collectPoints(((InternalNode)node).getNe(), allPoints);
+            collectPoints(((InternalNode)node).getSw(), allPoints);
+            collectPoints(((InternalNode)node).getSe(), allPoints);
+        }
+    }
+
+
+    private List<Point> identifyDuplicates(List<Point> allPoints) {
+        Map<String, Point> pointMap = new HashMap<>();
+        List<Point> duplicates = new ArrayList<>();
+
+        for (Point point : allPoints) {
+            String coordKey = point.getX() + "," + point.getY();
+            if (pointMap.containsKey(coordKey)) {
+                // If it's the first duplicate, add the original too
+                if (!duplicates.contains(pointMap.get(coordKey))) {
+                    duplicates.add(pointMap.get(coordKey));
+                }
+                duplicates.add(point); // Add the current duplicate
+            }
+            else {
+                pointMap.put(coordKey, point);
+            }
+        }
+        return duplicates;
+    }
+
+
+    /**
+     * dump
+     */
+    public void dump() {
+        System.out.println("QuadTree Dump:");
+        dump(root, 0); // Start the recursive dump from the root
+    }
+
+
+    private void dump(QuadTreeNode node, int depth) {
+        if (node == null) {
+            printIndent(depth);
+            System.out.println("Empty");
+            return;
+        }
+
+        // Handle different types of nodes
+        if (node instanceof InternalNode) {
+            printIndent(depth);
+            System.out.println("Internal");
+
+            InternalNode internalNode = (InternalNode)node;
+            dump(internalNode.getNw(), depth + 1); // Recurse for northwest
+                                                   // child
+            dump(internalNode.getNe(), depth + 1); // Recurse for northeast
+                                                   // child
+            dump(internalNode.getSw(), depth + 1); // Recurse for southwest
+                                                   // child
+            dump(internalNode.getSe(), depth + 1); // Recurse for southeast
+                                                   // child
+        }
+        else if (node instanceof LeafNode) {
+            LeafNode leafNode = (LeafNode)node;
+            printIndent(depth);
+            System.out.println("Leaf: " + leafNode.getPoint()); // Assuming
+                                                                // LeafNode has
+                                                                // a getPoint()
+                                                                // method
+        }
+        else if (node instanceof FlyweightNode) {
+            printIndent(depth);
+            System.out.println("Flyweight (empty)");
+        }
+    }
+
+
+    private void printIndent(int depth) {
+        for (int i = 0; i < depth; i++) {
+            System.out.print("  "); // Two spaces per depth level for
+                                    // indentation
+        }
     }
 
 }

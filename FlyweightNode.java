@@ -137,4 +137,11 @@ public class FlyweightNode extends QuadTreeNode {
         return Collections.emptyList(); // No points in FlyweightNode for any
                                         // region.
     }
+
+
+    @Override
+    public void dump(int level) {
+        // TODO Auto-generated method stub
+        
+    }
 }

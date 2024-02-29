@@ -64,4 +64,21 @@ public class LeafNode extends QuadTreeNode {
                 .getY() <= queryY + height).collect(Collectors.toList());
     }
 
+
+    @Override
+    public void dump(int level) {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    /**
+     * gets point
+     * @return Point point
+     */
+    public Point getPoint() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

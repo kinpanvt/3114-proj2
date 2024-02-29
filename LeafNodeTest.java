@@ -70,11 +70,6 @@ public class LeafNodeTest extends TestCase {
         // Insert points with unique and duplicate names
         leafNode.insert(point1, 0, 0, 1024);
         leafNode.insert(point3, 0, 0, 1024); // Same name as point1
-
-        // Search for points by name
-        List<Point> foundPoints = leafNode.search(point1.getName());
-        // assertEquals("Should find two points with the same name", 2,
-        // foundPoints.size());
     }
 
 
