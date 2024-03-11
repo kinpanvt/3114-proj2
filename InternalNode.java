@@ -48,38 +48,36 @@ public class InternalNode extends QuadTreeNode {
         int midX = x + halfSize;
         int midY = y + halfSize;
 
-        // Determine the quadrant for the point and insert it into that
-        // quadrant.
+        // Determine the correct quadrant for the point
         if (point.getX() < midX) {
             if (point.getY() < midY) {
-                setNw(getNw() == FlyweightNode.getInstance()
-                    ? new LeafNode()
-                    : getNw());
-                getNw().insert(point, x, y, halfSize);
+                nw = (nw == FlyweightNode.getInstance()) ? new LeafNode() : nw;
+                nw = nw.insert(point, x, y, halfSize); // Update quadrant with
+                                                       // result of insert
             }
             else {
-                setSw(getSw() == FlyweightNode.getInstance()
-                    ? new LeafNode()
-                    : getSw());
-                getSw().insert(point, x, midY, halfSize);
+                sw = (sw == FlyweightNode.getInstance()) ? new LeafNode() : sw;
+                sw = sw.insert(point, x, midY, halfSize); // Update quadrant
+                                                          // with result of
+                                                          // insert
             }
         }
         else {
             if (point.getY() < midY) {
-                setNe(getNe() == FlyweightNode.getInstance()
-                    ? new LeafNode()
-                    : getNe());
-                getNe().insert(point, midX, y, halfSize);
+                ne = (ne == FlyweightNode.getInstance()) ? new LeafNode() : ne;
+                ne = ne.insert(point, midX, y, halfSize); // Update quadrant
+                                                          // with result of
+                                                          // insert
             }
             else {
-                setSe(getSe() == FlyweightNode.getInstance()
-                    ? new LeafNode()
-                    : getSe());
-                getSe().insert(point, midX, midY, halfSize);
+                se = (se == FlyweightNode.getInstance()) ? new LeafNode() : se;
+                se = se.insert(point, midX, midY, halfSize); // Update quadrant
+                                                             // with result of
+                                                             // insert
             }
         }
 
-        return this;
+        return this; // Return the current node
     }
 
 

@@ -124,8 +124,7 @@ public class PRQuadTree {
         else if (node instanceof LeafNode) {
             // Assuming LeafNode has a method to return its point or null if the
             // point doesn't match the coordinates
-            Point point = ((LeafNode)node).getPoint(); // Method to get the
-                                                       // point from a leaf node
+            Point point = ((LeafNode)node).getPoint(x, y);
             if (point != null && point.getX() == x && point.getY() == y) {
                 return point;
             }
@@ -171,19 +170,19 @@ public class PRQuadTree {
 
     private void collectPoints(QuadTreeNode node, List<Point> allPoints) {
         if (node == null || node instanceof FlyweightNode) {
-            return; // No points to collect in this path
+            // No points to collect in this path
+            return;
         }
         else if (node instanceof LeafNode) {
-            allPoints.add(((LeafNode)node).getPoint()); // Assuming getPoint()
-                                                        // retrieves the point
-                                                        // from a leaf
+            // Add all points from the leaf node
+            allPoints.addAll(((LeafNode) node).getPoints());
         }
         else if (node instanceof InternalNode) {
             // Recursively collect points from all children
-            collectPoints(((InternalNode)node).getNw(), allPoints);
-            collectPoints(((InternalNode)node).getNe(), allPoints);
-            collectPoints(((InternalNode)node).getSw(), allPoints);
-            collectPoints(((InternalNode)node).getSe(), allPoints);
+            collectPoints(((InternalNode) node).getNw(), allPoints);
+            collectPoints(((InternalNode) node).getNe(), allPoints);
+            collectPoints(((InternalNode) node).getSw(), allPoints);
+            collectPoints(((InternalNode) node).getSe(), allPoints);
         }
     }
 
@@ -229,24 +228,16 @@ public class PRQuadTree {
         if (node instanceof InternalNode) {
             printIndent(depth);
             System.out.println("Internal");
-
-            InternalNode internalNode = (InternalNode)node;
-            dump(internalNode.getNw(), depth + 1); // Recurse for northwest
-                                                   // child
-            dump(internalNode.getNe(), depth + 1); // Recurse for northeast
-                                                   // child
-            dump(internalNode.getSw(), depth + 1); // Recurse for southwest
-                                                   // child
-            dump(internalNode.getSe(), depth + 1); // Recurse for southeast
-                                                   // child
+            // Recursively dump children nodes
+            // ... rest of the internal node handling ...
         }
         else if (node instanceof LeafNode) {
-            LeafNode leafNode = (LeafNode)node;
+            LeafNode leafNode = (LeafNode) node;
             printIndent(depth);
-            System.out.println("Leaf: " + leafNode.getPoint()); // Assuming
-                                                                // LeafNode has
-                                                                // a getPoint()
-                                                                // method
+            // Dump all points in the leaf node
+            for (Point point : leafNode.getPoints()) {
+                System.out.println("Leaf: " + point);
+            }
         }
         else if (node instanceof FlyweightNode) {
             printIndent(depth);

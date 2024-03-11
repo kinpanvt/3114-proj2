@@ -9,31 +9,54 @@ import java.util.stream.Collectors;
  * @version 02/25/24
  */
 public class LeafNode extends QuadTreeNode {
+    private static final int MAX_POINTS = 1; // Assuming a leaf node can contain
+                                             // up to 3 points before splitting
     private List<Point> points = new ArrayList<>();
 
+    /**
+     * insert
+     * 
+     * @param point
+     *            point
+     * @param x
+     *            X coord
+     * @param y
+     *            Y coord
+     * @param size
+     *            size
+     * @return QuadTreeNode
+     */
     @Override
     public QuadTreeNode insert(Point point, int x, int y, int size) {
-        // If the leaf node is empty, simply add the point and return this node.
-        if (this.points.isEmpty()) {
-            this.points.add(point);
-            return this;
-        }
-        else {
-            // If the node already has a point, it needs to split.
-            QuadTreeNode internalNode = new InternalNode();
-
-            // Re-insert existing point(s) into the new internal node.
-            for (Point existingPoint : this.points) {
-                internalNode = internalNode.insert(existingPoint, x, y, size);
+        // Split if this node exceeds MAX_POINTS and the new point is in a
+        // different location.
+        if (points.size() >= MAX_POINTS && points.stream().anyMatch(p -> p
+            .getX() != point.getX() || p.getY() != point.getY())) {
+            InternalNode internalNode = new InternalNode();
+            // Re-insert the existing points into the internal node
+            for (Point existingPoint : points) {
+                internalNode.insert(existingPoint, x, y, size);
             }
-
-            // Clear the points in the current leaf (now unnecessary since
-            // they're moved to the internal node).
-            this.points.clear();
-
-            // Insert the new point into the internal node.
+            // Clear the points since they are now in the internal node
+            points.clear();
+            // Insert the new point into the internal node
             return internalNode.insert(point, x, y, size);
         }
+        else {
+            // Otherwise, add the point to this leaf node.
+            points.add(point);
+            return this;
+        }
+    }
+
+
+    /**
+     * Gets all points stored in this leaf node.
+     * 
+     * @return A list of all points.
+     */
+    public List<Point> getPoints() {
+        return new ArrayList<>(points);
     }
 
 
@@ -68,17 +91,27 @@ public class LeafNode extends QuadTreeNode {
     @Override
     public void dump(int level) {
         // TODO Auto-generated method stub
-        
+
     }
 
 
     /**
-     * gets point
-     * @return Point point
+     * Gets the point with the specified coordinates.
+     * 
+     * @param x
+     *            x-coord
+     * @param y
+     *            y-coord
+     * @return Point with the specified coordinates, or null if no such point
+     *         exists.
      */
-    public Point getPoint() {
-        // TODO Auto-generated method stub
-        return null;
+    public Point getPoint(int x, int y) {
+        for (Point p : points) {
+            if (p.getX() == x && p.getY() == y) {
+                return p;
+            }
+        }
+        return null; // No point found with the specified coordinates.
     }
 
 }
