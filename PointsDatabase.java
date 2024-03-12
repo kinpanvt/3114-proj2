@@ -204,4 +204,88 @@ public class PointsDatabase {
         quadTree.dump(); // Implement this method in PRQuadTree to print its
                          // contents
     }
+    
+    
+    /**
+     * This method parses keywords in the line and calls methods in the
+     * database as required. Each line command will be specified by one of the
+     * keywords to perform the actions.
+     */
+    public void processor(String line) {
+        String[] arr = line.trim().split("\\s+");
+        String command = arr[0].toLowerCase(); 
+
+        switch (command) {
+            case "insert":
+                if (arr.length == 4) { 
+                    try {
+                        String name = arr[1];
+                        int x = Integer.parseInt(arr[2]);
+                        int y = Integer.parseInt(arr[3]);
+                        this.insert(name, x, y); 
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid number format for insert command.");
+                    }
+                } else {
+                    System.out.println("Invalid insert command.");
+                }
+                break;
+            case "remove":
+                if (arr.length == 2) {
+                    String name = arr[1];
+                    this.remove(name);
+                } else if (arr.length == 3) {
+                    try {
+                        int x = Integer.parseInt(arr[1]);
+                        int y = Integer.parseInt(arr[2]);
+                        this.remove(x, y);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid number format for remove command.");
+                    }
+                } else {
+                    System.out.println("Invalid remove command.");
+                }
+                break;
+            case "regionsearch":
+                if (arr.length == 5) {
+                    try {
+                        int x = Integer.parseInt(arr[1]);
+                        int y = Integer.parseInt(arr[2]);
+                        int width = Integer.parseInt(arr[3]);
+                        int height = Integer.parseInt(arr[4]);
+                        this.regionSearch(x, y, width, height);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid number format for regionsearch command.");
+                    }
+                } else {
+                    System.out.println("Invalid regionsearch command.");
+                }
+                break;
+            case "duplicates":
+                if (arr.length == 1) {
+                    this.duplicates();
+                } else {
+                    System.out.println("Invalid duplicates command.");
+                }
+                break;
+            case "search":
+                if (arr.length == 2) {
+                    String name = arr[1];
+                    this.search(name);
+                } else {
+                    System.out.println("Invalid search command.");
+                }
+                break;
+            case "dump":
+                if (arr.length == 1) {
+                    this.dump();
+                } else {
+                    System.out.println("Invalid dump command.");
+                }
+                break;
+            default:
+                System.out.println("Unrecognized command: " + line);
+                break;
+        }
+    }
 }
