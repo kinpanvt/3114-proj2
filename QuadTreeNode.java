@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,18 +23,17 @@ public abstract class QuadTreeNode {
      * splitting behavior.
      *
      * @param point
-     *            The point to insert.
+     *              The point to insert.
      * @param x
-     *            The x-coordinate of the top-left corner of the current region.
+     *              The x-coordinate of the top-left corner of the current region.
      * @param y
-     *            The y-coordinate of the top-left corner of the current region.
+     *              The y-coordinate of the top-left corner of the current region.
      * @param size
-     *            The size of the current region.
+     *              The size of the current region.
      * @return The updated node after insertion, which may be a new node if the
      *         structure changed.
      */
     public abstract QuadTreeNode insert(Point point, int x, int y, int size);
-
 
     /**
      * Attempts to remove a specified point from the quadtree node. If the node
@@ -43,17 +43,16 @@ public abstract class QuadTreeNode {
      * leaf, it will attempt to remove the point directly from its collection.
      *
      * @param point
-     *            The point to remove.
+     *              The point to remove.
      * @param x
-     *            The x-coordinate of the top-left corner of the current region.
+     *              The x-coordinate of the top-left corner of the current region.
      * @param y
-     *            The y-coordinate of the top-left corner of the current region.
+     *              The y-coordinate of the top-left corner of the current region.
      * @param size
-     *            The size of the current region.
+     *              The size of the current region.
      * @return True if the point was successfully removed, false otherwise.
      */
     public abstract boolean remove(Point point, int x, int y, int size);
-
 
     /**
      * Searches for all points matching a given name within the quadtree node.
@@ -62,13 +61,12 @@ public abstract class QuadTreeNode {
      * location.
      *
      * @param name
-     *            The name of the point to search for.
+     *             The name of the point to search for.
      * @return A list of points matching the given name. This list may be empty
      *         if no matching
      *         points are found.
      */
-    public abstract List<Point> search(String name);
-
+    public abstract ArrayList<Point> search(String name);
 
     /**
      * Performs a search within the quadtree node for all points that fall
@@ -78,36 +76,37 @@ public abstract class QuadTreeNode {
      * retrieval of points based on their location.
      *
      * @param queryX
-     *            The x-coordinate of the top-left corner of the query region.
+     *                 The x-coordinate of the top-left corner of the query region.
      * @param queryY
-     *            The y-coordinate of the top-left corner of the query region.
+     *                 The y-coordinate of the top-left corner of the query region.
      * @param width
-     *            The width of the query region.
+     *                 The width of the query region.
      * @param height
-     *            The height of the query region.
+     *                 The height of the query region.
      * @param nodeX
-     *            The x-coordinate of the top-left corner of the current node's
-     *            region.
+     *                 The x-coordinate of the top-left corner of the current node's
+     *                 region.
      * @param nodeY
-     *            The y-coordinate of the top-left corner of the current node's
-     *            region.
+     *                 The y-coordinate of the top-left corner of the current node's
+     *                 region.
      * @param nodeSize
-     *            The size of the current node's region.
+     *                 The size of the current node's region.
      * @return A list of points found within the specified region. This list may
      *         be empty if no
      *         points are found.
      */
-    public abstract List<Point> regionSearch(
-        int queryX,
-        int queryY,
-        int width,
-        int height,
-        int nodeX,
-        int nodeY,
-        int nodeSize);
+    public abstract ArrayList<Point> regionSearch(
+            int queryX,
+            int queryY,
+            int width,
+            int height,
+            int nodeX,
+            int nodeY,
+            int nodeSize);
 
     /**
      * dump
+     * 
      * @param level lvl
      */
     public abstract void dump(int level);
