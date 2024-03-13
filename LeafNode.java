@@ -11,7 +11,7 @@ public class LeafNode extends QuadTreeNode {
     }
 
     @Override
-    public void insert(Point point, Boundary boundary) {
+    public QuadTreeNode insert(Point point, Boundary boundary) {
         // PRQuadTree handles splitting
         throw new UnsupportedOperationException("LeafNode insert operation should be handled by PRQuadTree.");
     }

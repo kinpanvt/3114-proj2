@@ -3,10 +3,6 @@ public class PRQuadTree {
     private QuadTreeNode root;
     private Boundary boundary;
 
-    public enum Quadrant {
-        NW, NE, SW, SE
-    }
-
 
     
     public PRQuadTree(int x, int y, int width, int height) {

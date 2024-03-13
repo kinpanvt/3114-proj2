@@ -54,9 +54,44 @@ public class InternalNode extends QuadTreeNode {
     }
 
     @Override
-    public void insert(Point point, Boundary boundary) {
-        // Determine the quadrant for the point and insert it into the
-        // appropriate child
+    public QuadTreeNode insert(Point point, Boundary boundary) {
+        // Determine the quadrant for the point
+        Quadrant quadrant = boundary.getQuadrant(point);
+        switch (quadrant) {
+            case NW:
+                if (nw instanceof EmptyNode) {
+                    nw = new LeafNode(point);
+                } else {
+                    Boundary subBoundary = boundary.getSubBoundary(Quadrant.NW);
+                    nw = nw.insert(point, subBoundary);
+                }
+                break;
+            case NE:
+                if (ne instanceof EmptyNode) {
+                    ne = new LeafNode(point);
+                } else {
+                    Boundary subBoundary = boundary.getSubBoundary(Quadrant.NE);
+                    ne = ne.insert(point, subBoundary);
+                }
+                break;
+            case SW:
+                if (sw instanceof EmptyNode) {
+                    sw = new LeafNode(point);
+                } else {
+                    Boundary subBoundary = boundary.getSubBoundary(Quadrant.SW);
+                    sw = sw.insert(point, subBoundary);
+                }
+                break;
+            case SE:
+                if (se instanceof EmptyNode) {
+                    se = new LeafNode(point);
+                } else {
+                    Boundary subBoundary = boundary.getSubBoundary(Quadrant.SE);
+                    se = se.insert(point, subBoundary);
+                }
+                break;
+        }
+        return this; // Return the current node after insertion
     }
 
 

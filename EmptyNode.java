@@ -8,10 +8,10 @@ public class EmptyNode extends QuadTreeNode {
     }
 
     @Override
-    public void insert(Point point, Boundary boundary) {
+    public QuadTreeNode insert(Point point, Boundary boundary) {
         // Upon inserting a point into an EmptyNode, we convert it to a LeafNode
         // containing the point, effectively updating the tree structure.
-        //return new LeafNode(point);
+        return new LeafNode(point);
     }
 
     @Override
