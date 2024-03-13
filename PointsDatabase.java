@@ -1,5 +1,8 @@
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.io.File;
 
 /**
  * This be the javadoc to be done
@@ -22,16 +25,41 @@ public class PointsDatabase {
     }
 
     /**
-     * to do
-     * @param args stuff
+     * The entry point of the program which initializes the command processor
+     * and processes commands from the specified file.
+     * 
+     * @param args
+     *             Command line arguments, expecting the name of the command file
+     *             as the first argument.
      */
     public static void main(String[] args) {
+        // Check if the command line argument for the command file is provided
+        if (args.length < 1) {
+            System.out.println("No command file provided.");
+            return;
+        }
 
+        String commandFileName = args[0];
+        PointsCommandProcessor commandProcessor = new PointsCommandProcessor();
+
+        // Attempt to open and process the command file
+        try (Scanner scanner = new Scanner(new File(commandFileName))) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine().trim();
+                if (!line.isEmpty()) {
+                    commandProcessor.processCommand(line);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Command file not found: " + commandFileName);
+        }
     }
 
     /**
      * gets Points From SkipList
-     * @param name name of list
+     * 
+     * @param name
+     *             name of list
      * @return List<Point> list
      */
     public List<Point> getPointsFromSkipList(String name) {
@@ -45,7 +73,9 @@ public class PointsDatabase {
 
     /**
      * gets Points From SkipList
-     * @param name name of list
+     * 
+     * @param name
+     *             name of list
      * @return List<Point> list
      */
     public List<Point> getPointsByName(String name) {
@@ -58,15 +88,19 @@ public class PointsDatabase {
     }
 
     /**
-     * insert 
-     * @param name of rectangle
-     * @param x coord
-     * @param y coord
+     * insert
+     * 
+     * @param name
+     *             of rectangle
+     * @param x
+     *             coord
+     * @param y
+     *             coord
      */
     public void insert(String name, int x, int y) {
         if (x < 0 || y < 0 || x >= WORLD_SIZE || y >= WORLD_SIZE) {
             System.out.println("Point " + name
-                + " out of bounds and cannot be inserted.");
+                    + " out of bounds and cannot be inserted.");
             return;
         }
 
@@ -74,7 +108,7 @@ public class PointsDatabase {
         // Check for existing point with the same name
         if (!skipList.search(name).isEmpty()) {
             System.out.println("A point with name " + name
-                + " already exists.");
+                    + " already exists.");
             return;
         }
 
@@ -88,7 +122,9 @@ public class PointsDatabase {
 
     /**
      * remove
-     * @param name name
+     * 
+     * @param name
+     *             name
      */
     public void remove(String name) {
         List<Point> points = getPointsFromSkipList(name); // Use the utility
@@ -107,14 +143,17 @@ public class PointsDatabase {
 
     /**
      * remove
-     * @param x coord
-     * @param y coord
+     * 
+     * @param x
+     *          coord
+     * @param y
+     *          coord
      */
     public void remove(int x, int y) {
         // Assuming PRQuadTree provides a method to directly find points by
         // coordinates
         @SuppressWarnings("unchecked")
-        List<Point> points = (List<Point>)quadTree.searchByCoordinates(x, y);
+        List<Point> points = (List<Point>) quadTree.searchByCoordinates(x, y);
         if (points.isEmpty()) {
             System.out.println("No point found at (" + x + ", " + y + ")");
             return;
@@ -131,14 +170,20 @@ public class PointsDatabase {
 
     /**
      * Region Search
-     * @param x coord
-     * @param y coord
-     * @param width coord
-     * @param height coord
+     * 
+     * @param x
+     *               coord
+     * @param y
+     *               coord
+     * @param width
+     *               coord
+     * @param height
+     *               coord
      */
     public void regionSearch(int x, int y, int width, int height) {
         if (width <= 0 || height <= 0) {
-            System.out.println("Invalid region dimensions.");
+            System.out.println("Rectangle rejected: (" + x + ", " + y + ", "
+                    + width + ", " + height + ")");
             return;
         }
 
@@ -168,7 +213,9 @@ public class PointsDatabase {
 
     /**
      * Search
-     * @param name rec
+     * 
+     * @param name
+     *             rec
      */
     public void search(String name) {
         // Directly call the skipList.search(name) which returns
