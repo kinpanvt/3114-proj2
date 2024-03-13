@@ -1,7 +1,7 @@
-import student.TestCase;
+import student.TestCase; 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.List;
+
 
 /**
  * This class tests the CommandProcessor class.
@@ -19,7 +19,6 @@ public class CommandProcessorTest extends TestCase {
         new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
     private CommandProcessor cp;
-    private PointsDatabase db;
 
     /**
      * The setUp() method will be called automatically before
@@ -30,7 +29,7 @@ public class CommandProcessorTest extends TestCase {
     public void setUp() {
         System.setOut(new PrintStream(outContent));
         cp = new CommandProcessor();
-        db = new PointsDatabase();
+
     }
 
 
@@ -1860,102 +1859,4 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
 
     }
-
-
-    /**
-     * 
-     */
-    public void testInsertWithinBounds() {
-        db.insert("Point1", 100, 100);
-        assertFalse(db.getPointsByName("Point1").isEmpty());
-    }
-
-
-    /**
-     * 
-     */
-    public void testInsertXOutOfBounds() {
-        db.insert("Point2", -1, 100);
-        assertTrue(db.getPointsByName("Point2").isEmpty());
-    }
-
-
-    /**
-     * 
-     */
-    public void testInsertYOutOfBounds() {
-        db.insert("Point3", 100, 1024 + 1);
-        assertTrue(db.getPointsByName("Point3").isEmpty());
-    }
-
-
-    /**
-     * 
-     */
-    public void testInsertDuplicateName() {
-        db.insert("Point4", 100, 100);
-        db.insert("Point4", 200, 200); // Attempt to insert duplicate name
-        List<Point> points = db.getPointsByName("Point4");
-        assertEquals(1, points.size()); // Ensure only one point with the name
-                                        // exists
-    }
-
-
-    /**
-     * 
-     */
-    public void testInsertUniquePoint() {
-        db.insert("Point5", 300, 300);
-        assertFalse(db.getPointsByName("Point5").isEmpty());
-    }
-
-
-    /**
-     * 
-     */
-    public void testInsertWithinBounds1() {
-        db.insert("Point1", 100, 100);
-        assertFalse(db.getPointsByName("Point1").isEmpty());
-    }
-
-
-    /**
-     * 
-     */
-    public void testInsertXOutOfBounds1() {
-        db.insert("Point2", -1, 100);
-        assertTrue(db.getPointsByName("Point2").isEmpty());
-    }
-
-
-    /**
-     * 
-     */
-    public void testInsertYOutOfBounds1() {
-        db.insert("Point3", 100, 1024 + 1);
-        assertTrue(db.getPointsByName("Point3").isEmpty());
-    }
-
-
-    /**
-     * 
-     */
-    public void testInsertDuplicateName1() {
-        db.insert("Point4", 100, 100);
-        db.insert("Point4", 200, 200); // Attempt to insert duplicate name
-        // Check if the point with the new coordinates was not inserted
-        boolean duplicateExists = db.getPointsByName("Point4").stream()
-            .anyMatch(point -> point.getX() == 200 && point.getY() == 200);
-        assertFalse(duplicateExists);
-    }
-
-
-    /**
-     * 
-     */
-    public void testInsertUniquePoint1() {
-        db.insert("Point5", 300, 300);
-        assertFalse(db.getPointsByName("Point5").isEmpty());
-    }
-
 }

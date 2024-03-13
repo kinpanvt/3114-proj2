@@ -1,37 +1,18 @@
 /**
- * Represents a point in a two-dimensional space with a name identifier.
- * This class is immutable, meaning once an instance is created, its state
- * cannot be changed.
- * 
- * @author kinjalpandey, architg03
- * @version 02/25/24
+ * This class represents a point in a 2D space with a name.
+ * Points can be compared by their names and have spatial coordinates (x, y).
  */
-public class Point {
-    /**
-     * The name identifier for the point.
-     */
-    private final String name;
+public class Point implements Comparable<Point>{
+    // Fields for the name and coordinates of the point
+    private String name;
+    private int x, y;
 
     /**
-     * The x-coordinate of the point.
-     */
-    private final int x;
-
-    /**
-     * The y-coordinate of the point.
-     */
-    private final int y;
-
-    /**
-     * Constructs a new Point with the specified name, x-coordinate, and
-     * y-coordinate.
-     *
-     * @param name
-     *            The name identifier for the point.
-     * @param x
-     *            The x-coordinate of the point.
-     * @param y
-     *            The y-coordinate of the point.
+     * Constructs a Point object with a given name and coordinates.
+     * 
+     * @param name the name of the point
+     * @param x    the x-coordinate of the point
+     * @param y    the y-coordinate of the point
      */
     public Point(String name, int x, int y) {
         this.name = name;
@@ -39,44 +20,52 @@ public class Point {
         this.y = y;
     }
 
-
     /**
      * Returns the name of the point.
-     *
-     * @return The name identifier of the point.
+     * 
+     * @return the name of the point
      */
     public String getName() {
         return name;
     }
 
-
     /**
      * Returns the x-coordinate of the point.
-     *
-     * @return The x-coordinate.
+     * 
+     * @return the x-coordinate of the point
      */
     public int getX() {
         return x;
     }
 
-
     /**
      * Returns the y-coordinate of the point.
-     *
-     * @return The y-coordinate.
+     * 
+     * @return the y-coordinate of the point
      */
     public int getY() {
         return y;
     }
 
-
     /**
-     * Returns a string representation of the point in the format "name (x, y)".
-     *
-     * @return The string representation of the point.
+     * Returns a string representation of the point, including its name and coordinates.
+     * 
+     * @return a string representation of the point
      */
     @Override
     public String toString() {
-        return name + " (" + x + ", " + y + ")";
+        return String.format("%s (%d, %d)", name, x, y);
+    }
+
+    /**
+     * Compares this point to another point based on the lexicographical order of their names.
+     * 
+     * @param other the point to be compared
+     * @return a negative integer, zero, or a positive integer as this point's name
+     *         is less than, equal to, or greater than the specified point's name.
+     */
+    @Override
+    public int compareTo(Point other) {
+        return this.name.compareTo(other.name);
     }
 }
