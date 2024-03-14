@@ -97,25 +97,29 @@ public class PRQuadTree {
     }
 
     private void dump(QuadTreeNode node, int depth) {
+        int nodesPrinted = 0;
         if (node == null) {
             printIndent(depth);
-            System.out.println("Empty");
-            return;
+            System.out.println("Node at 0, 0" + size + ": Empty");
+            nodesPrinted++;
         }
-
         if (node instanceof InternalNode) {
             printIndent(depth);
             System.out.println("Internal");
+            nodesPrinted++;
         } else if (node instanceof LeafNode) {
             LeafNode leafNode = (LeafNode) node;
             printIndent(depth);
             for (Point point : leafNode.getPoints()) {
                 System.out.println("Leaf: " + point);
+                nodesPrinted++;
             }
         } else if (node instanceof FlyweightNode) {
             printIndent(depth);
-            System.out.println("Flyweight (empty)");
+            System.out.println("Node at 0, 0, " + size + ": Empty");
+            nodesPrinted++;
         }
+        System.out.println(nodesPrinted + " quadtree nodes printed");
     }
 
     private void printIndent(int depth) {

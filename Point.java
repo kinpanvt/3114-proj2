@@ -27,18 +27,17 @@ public class Point {
      * y-coordinate.
      *
      * @param name
-     *            The name identifier for the point.
+     *             The name identifier for the point.
      * @param x
-     *            The x-coordinate of the point.
+     *             The x-coordinate of the point.
      * @param y
-     *            The y-coordinate of the point.
+     *             The y-coordinate of the point.
      */
     public Point(String name, int x, int y) {
         this.name = name;
         this.x = x;
         this.y = y;
     }
-
 
     /**
      * Returns the name of the point.
@@ -49,7 +48,6 @@ public class Point {
         return name;
     }
 
-
     /**
      * Returns the x-coordinate of the point.
      *
@@ -58,7 +56,6 @@ public class Point {
     public int getX() {
         return x;
     }
-
 
     /**
      * Returns the y-coordinate of the point.
@@ -69,7 +66,6 @@ public class Point {
         return y;
     }
 
-
     /**
      * Returns a string representation of the point in the format "name (x, y)".
      *
@@ -78,5 +74,13 @@ public class Point {
     @Override
     public String toString() {
         return name + " " + x + " " + y;
+    }
+
+    public boolean isValid() {
+        if (x < 0 || y < 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
