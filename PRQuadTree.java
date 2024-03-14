@@ -11,58 +11,50 @@ public class PRQuadTree {
     }
 
     public void insert(Point point) {
-        if (!boundary.contains(point)) {
-            System.out.println("Point " + point + " is out of the boundary and cannot be inserted.");
-            return;
-        }
         root = insert(root, point, boundary);
     }
 
     private QuadTreeNode insert(QuadTreeNode node, Point point, Boundary boundary) {
         if (node instanceof EmptyNode) {
-            return new LeafNode(point);
+            return new LeafNode(point); // Convert empty node to leaf node with the new point
         } else if (node instanceof LeafNode) {
             LeafNode leaf = (LeafNode) node;
-            if (!leaf.addPoint(point) || leaf.shouldSplit()) {
-                // Proceed with splitting logic
-                InternalNode internalNode = new InternalNode();
-                for (int i = 0; i < leaf.getPointCount(); i++) {
-                    Point existingPoint = leaf.getPoints()[i];
-                    internalNode = (InternalNode) internalInsert(internalNode, existingPoint, boundary);
-                }
-                // Insert the new point in the newly created internal node
-                return internalInsert(internalNode, point, boundary);
-            } else {
-                // Point added successfully without needing a split
+            if (leaf.getPointCount() < 3 || leaf.allPointsSame()) {
+                leaf.addPoint(point);
                 return leaf;
+            } else {
+                // Need to split the leaf node
+                InternalNode internal = new InternalNode();
+                for (Point p : leaf.getPoints()) {
+                    internal = (InternalNode) insert(internal, p, boundary); // Reinsert existing points
+                }
+                internal = (InternalNode) insert(internal, point, boundary); // Insert new point
+                return internal;
             }
         } else if (node instanceof InternalNode) {
-            return internalInsert((InternalNode) node, point, boundary);
+            InternalNode internal = (InternalNode) node;
+            Quadrant quadrant = boundary.getQuadrant(point);
+            Boundary subBoundary = boundary.getSubBoundary(quadrant);
+            switch (quadrant) {
+                case NW:
+                    internal.setNW(insert(internal.getNW(), point, subBoundary));
+                    break;
+                case NE:
+                    internal.setNE(insert(internal.getNE(), point, subBoundary));
+                    break;
+                case SW:
+                    internal.setSW(insert(internal.getSW(), point, subBoundary));
+                    break;
+                case SE:
+                    internal.setSE(insert(internal.getSE(), point, subBoundary));
+                    break;
+            }
+            return internal;
+        } else {
+            // Should not reach here
+            throw new IllegalStateException("Unknown QuadTreeNode type");
         }
-        throw new IllegalStateException("Unsupported node type");
     }
-
-    private QuadTreeNode internalInsert(InternalNode node, Point point, Boundary boundary) {
-        Quadrant quadrant = boundary.getQuadrant(point);
-        Boundary subBoundary = boundary.getSubBoundary(quadrant);
-
-        switch (quadrant) {
-            case NW:
-                node.setNW(insert(node.getNW(), point, subBoundary));
-                break;
-            case NE:
-                node.setNE(insert(node.getNE(), point, subBoundary));
-                break;
-            case SW:
-                node.setSW(insert(node.getSW(), point, subBoundary));
-                break;
-            case SE:
-                node.setSE(insert(node.getSE(), point, subBoundary));
-                break;
-        }
-        return node;
-    }
-
     public boolean search(Point point) {
         return search(root, point, boundary);
     }
@@ -242,17 +234,61 @@ public class PRQuadTree {
                     break;
             }
             // After removal, check if the internal node should merge its children
-            return checkAndMerge(internal);
+            node = checkAndMerge(internal, boundary);
         }
         return node; // Return the node after potentially removing a point
     }
 
-    private QuadTreeNode checkAndMerge(InternalNode node) {
-        // Check if all children are leaf nodes or empty, and if so, whether they can be merged into a single node
-        // This method requires checking all children and potentially merging them into a new LeafNode if they all contain the same point or are empty
-        // The actual implementation will depend on how your LeafNode and InternalNode are structured
-        // Return either the original node if no merging occurred, or the new node after merging
-        return node; // Placeholder return
+    private QuadTreeNode checkAndMerge(InternalNode node, Boundary boundary) {
+        if (allChildrenAreLeaves(node)) {
+            // Initialize with the maximum possible size, but you might adjust the logic to handle dynamic sizes.
+            Point[] allPoints = new Point[LeafNode.CAPACITY * 4]; // Assuming maximum capacity from all leaves.
+            int index = 0;
+
+            // Collect all points from leaf nodes.
+            index = collectPoints(node.getNW(), allPoints, index);
+            index = collectPoints(node.getNE(), allPoints, index);
+            index = collectPoints(node.getSW(), allPoints, index);
+            index = collectPoints(node.getSE(), allPoints, index);
+
+            // Determine if these points can fit into a single LeafNode.
+            if (canMerge(allPoints, index)) {
+                // Create a new LeafNode with all these points. You'll need to adjust LeafNode's constructor to handle an array of Points.
+                return new LeafNode(allPoints, index); // Adjusted constructor needed here.
+            }
+        }
+
+        // If not all children are leaves or can't be merged, return the node as is.
+        return node;
+    }
+
+    // Helper method to check if all children of an internal node are LeafNodes.
+    private boolean allChildrenAreLeaves(InternalNode node) {
+        return (node.getNW() instanceof LeafNode) &&
+               (node.getNE() instanceof LeafNode) &&
+               (node.getSW() instanceof LeafNode) &&
+               (node.getSE() instanceof LeafNode);
+    }
+
+    // Method to collect points from a node and add them to the allPoints array.
+    private int collectPoints(QuadTreeNode node, Point[] allPoints, int startIndex) {
+        if (node instanceof LeafNode) {
+            LeafNode leaf = (LeafNode) node;
+            for (int i = 0; i < leaf.getPointCount(); i++) {
+                allPoints[startIndex++] = leaf.getPoints()[i];
+            }
+        }
+        return startIndex; // Return the new start index for the next addition.
+    }
+
+    // Check if the collected points can be merged into a single LeafNode.
+    private boolean canMerge(Point[] allPoints, int count) {
+        if (count > LeafNode.CAPACITY) {
+            return false; // Too many points to merge into a single LeafNode.
+        }
+
+        // You may need to add additional logic here based on your project's merge rules.
+        return true;
     }
     
 }

@@ -22,4 +22,5 @@ public abstract class QuadTreeNode {
      */
     public abstract boolean search(Point point, Boundary boundary);
 
+    
 }
