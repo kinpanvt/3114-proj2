@@ -42,4 +42,16 @@ public class Boundary {
         // Default case should not occur
         throw new IllegalStateException("Point does not fit within any quadrant");
     }
+
+    public boolean intersects(Boundary other) {
+        // Check if one rectangle is to the left of the other
+        if (this.x + this.width <= other.x || other.x + other.width <= this.x) {
+            return false;
+        }
+        // Check if one rectangle is above the other
+        if (this.y + this.height <= other.y || other.y + other.height <= this.y) {
+            return false;
+        }
+        return true; // Overlapping occurs
+    }
 }

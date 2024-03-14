@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+
 import java.util.Iterator;
 
 /**
@@ -33,15 +33,19 @@ public class Database {
     private Iterator<KVPair<String, Rectangle>> itr1;
 
     // Integrating Point objects into Database
-    private SkipList<String, Point> pointsByName;
+    private SkipList<String, Point> nameIndex;
+    private PRQuadTree spatialIndex;
+    
     /**
      * The constructor for this class initializes a SkipList object with String
      * and Rectangle a its parameters.
      */
     public Database() {
         list = new SkipList<String, Rectangle>();
-        pointsByName = new SkipList<>();
-        /***********PRQuadTree init*********/
+        this.nameIndex = new SkipList<>();
+        // 1024x1024 units as per project description
+        this.spatialIndex = new PRQuadTree(0, 0, 1024, 1024);
+        
     }
 
 
@@ -267,22 +271,89 @@ public class Database {
     
     
     //------------------------------------------
-
     
-    
-    public void insertPoint(String name, int x, int y) {
+    public void insertPR(String name, int x, int y) {
+        // Validate the point
+        if (x < 0 || y < 0 || x >= 1024 || y >= 1024) {
+            System.out.println("Point rejected: " + name + " (" + x + ", " + y + ")");
+            return;
+        }
+        
         Point point = new Point(name, x, y);
-        KVPair<String, Point> pair = new KVPair<>(name, point);
-        pointsByName.insert(pair);
+        // Execute insert operations without checking return value
+        nameIndex.insert(new KVPair<>(name, point));
+        spatialIndex.insert(point);
+        // Assume insertions are successful and print success message
+        System.out.println("Point inserted: " + point);
+        // Note: This approach does not handle insertion failures. Adjustments might be needed based on actual behavior.
     }
 
-    public void searchByName(String name) {
-        // Search in SkipList. similar structure to ArrayList<KVPair<String, Point>>
-        ArrayList<KVPair<String, Point>> searchResults = pointsByName.search(name);
-        if (searchResults != null) {
-            System.out.println(searchResults);
+    public void removePR(String name) {
+        // Search by name in Skip List
+        var result = nameIndex.search(name);
+        if (result.isEmpty()) {
+            System.out.println("Point not found: " + name);
+            return;
+        }
+        
+        // Assuming we remove the first point found with the given name
+        Point pointToRemove = result.get(0).getValue();
+        if (nameIndex.remove(name) != null && spatialIndex.remove(pointToRemove)) {
+            System.out.println("Point removed: " + name);
         } else {
-            System.out.println("No point found with name: " + name);
+            System.out.println("Removal failed for: " + name);
         }
     }
+
+    public void removePR(int x, int y) {
+        // Remove by coordinates in PR QuadTree
+        if (spatialIndex.remove(new Point("", x, y))) {
+            System.out.println("Point removed at (" + x + ", " + y + ")");
+        } else {
+            System.out.println("No point exists at (" + x + ", " + y + ")");
+        }
+    }
+
+    public void regionSearchPR(int x, int y, int width, int height) {
+        // Assuming spatialIndex.regionSearch returns a PointContainer object
+        PointContainer points = spatialIndex.regionSearch(x, y, width, height);
+        
+        if (points.getSize() == 0) {
+            System.out.println("No points found in the region");
+            return;
+        }
+        
+        System.out.println("Points in region (" + x + ", " + y + ", " + width + ", " + height + "):");
+        for (int i = 0; i < points.getSize(); i++) {
+            // Assuming Point's toString method gives the desired output format
+            System.out.println(points.getPoints()[i]);
+        }
+    }
+
+    public void handleDuplicatesPR() {
+        spatialIndex.findDuplicates();
+    }
+
+    public void searchPR(String name) {
+        // Search by name in Skip List
+        var result = nameIndex.search(name);
+        if (result.isEmpty()) {
+            System.out.println("Point not found: " + name);
+            return;
+        }
+        
+        System.out.println("Found points:");
+        result.forEach(kvPair -> System.out.println(kvPair.getValue()));
+    }
+
+    public void dumpPR() {
+        // Dump contents of both Skip List and PR QuadTree
+        System.out.println("SkipList dump:");
+        nameIndex.dump();
+        
+        System.out.println("PRQuadTree dump:");
+        spatialIndex.dump();
+    }
+    
+    
 }
