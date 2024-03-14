@@ -152,7 +152,7 @@ public class PointsDatabase {
         @SuppressWarnings("unchecked")
         List<Point> points = (List<Point>) quadTree.searchByCoordinates(x, y);
         Point pointToRemove = points.get(0);
-        if (points.getFirst().isValid() == false) {
+        if (points.get(0).isValid() == false) {
             System.out.println("Point rejected (" + x + ", " + y + ")");
             return;
         }

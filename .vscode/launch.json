@@ -8,14 +8,16 @@
             "type": "java",
             "name": "Current File",
             "request": "launch",
-            "mainClass": "${file}"
+            "mainClass": "${file}",
+            "args": "SyntaxTest2.txt",
         },
         {
             "type": "java",
             "name": "PointsDatabase",
             "request": "launch",
             "mainClass": "PointsDatabase",
-            "projectName": "3114-proj2-main"
+            "projectName": "3114-proj2-main",
+            "args": "SyntaxTest2.txt",
         },
         {
             "type": "java",

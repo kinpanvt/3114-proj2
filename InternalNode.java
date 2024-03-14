@@ -44,29 +44,29 @@ public class InternalNode extends QuadTreeNode {
      *              The size of the current region.
      * @return
      */
+
     @Override
     public QuadTreeNode insert(Point point, int x, int y, int size) {
         int halfSize = size / 2;
         int midX = x + halfSize;
         int midY = y + halfSize;
 
+        // Determine which quadrant the point belongs to and insert it there.
         if (point.getX() < midX) {
             if (point.getY() < midY) {
-                nw = nw.insert(point, x, y, halfSize);
+                nw = nw.insert(point, x, y, halfSize); // NW quadrant
             } else {
-                sw = sw.insert(point, x, midY, halfSize);
+                sw = sw.insert(point, x, midY, halfSize); // SW quadrant
             }
         } else {
             if (point.getY() < midY) {
-                ne = ne.insert(point, midX, y, halfSize);
+                ne = ne.insert(point, midX, y, halfSize); // NE quadrant
             } else {
-                se = se.insert(point, midX, midY, halfSize);
+                se = se.insert(point, midX, midY, halfSize); // SE quadrant
             }
         }
 
-        // Update this internal node to reference the new or modified child
-        // nodes
-        return this;
+        return this; // Return this internal node after the insertion.
     }
 
     /**

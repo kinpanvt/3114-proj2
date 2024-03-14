@@ -15,20 +15,29 @@ public class LeafNode extends QuadTreeNode {
 
     @Override
     public QuadTreeNode insert(Point point, int x, int y, int size) {
+        for (Point existingPoint : points) {
+            if (existingPoint.equals(point)) {
+                return this; // Point already exists, do nothing.
+            }
+        }
         points.add(point);
 
         if (points.size() > MAX_POINTS) {
             InternalNode internalNode = new InternalNode();
             for (Point existingPoint : points) {
+                // Reinsert existing points into the new internal node.
                 internalNode = (InternalNode) internalNode.insert(existingPoint, x, y, size);
             }
-            return internalNode;
+            return internalNode; // Return the new internal node after splitting.
         }
-        return this;
+        return this; // Return this leaf node if no splitting is needed.
     }
 
     @Override
     public boolean remove(Point point, int x, int y, int size) {
+        if (!points.contains(point)) {
+            return false;
+        }
         return points.remove(point);
     }
 

@@ -10,7 +10,7 @@ public class PRQuadTree {
     }
 
     public void insert(Point point) {
-        root = root.insert(point, size, size, size);
+        root = root.insert(point, 0, 0, size);
     }
 
     public boolean remove(Point point) {
