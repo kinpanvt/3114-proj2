@@ -99,8 +99,7 @@ public class PointsDatabase {
      */
     public void insert(String name, int x, int y) {
         if (x < 0 || y < 0 || x >= WORLD_SIZE || y >= WORLD_SIZE) {
-            System.out.println("Point " + name
-                    + " out of bounds and cannot be inserted.");
+            System.out.println("Point rejected: (" + name + ", " + x + ", " + y + ")");
             return;
         }
 
@@ -127,17 +126,19 @@ public class PointsDatabase {
      *             name
      */
     public void remove(String name) {
-        List<Point> points = getPointsFromSkipList(name); // Use the utility
-                                                          // method
+        List<Point> points = getPointsFromSkipList(name); // Use the utility method
+        if (points == null) {
+            System.out.println("Point not found: " + name);
+            return;
+        }
         if (points.isEmpty()) {
-            System.out.println("Point with name " + name + " does not exist.");
+            System.out.println("Point not removed: " + name);
             return;
         }
 
         Point pointToRemove = points.get(0);
         skipList.remove(name); // Assuming removal by key
-        quadTree.remove(pointToRemove); // Assuming direct removal by Point
-                                        // object is supported
+        quadTree.remove(pointToRemove); // Assuming direct removal by Point object is supported
         System.out.println("Point removed: " + pointToRemove);
     }
 
@@ -154,14 +155,31 @@ public class PointsDatabase {
         // coordinates
         @SuppressWarnings("unchecked")
         List<Point> points = (List<Point>) quadTree.searchByCoordinates(x, y);
+        if (points == null) {
+            System.out.println("Point not found: (" + x + ", " + y + ")");
+            return;
+        }
+        if (points.get(0).isValid() == false) {
+            System.out.println("Point rejected (" + x + ", " + y + ")");
+            return;
+        }
+        Point pointToRemove = points.get(0);
+        if (points.get(0).isValid() == false) {
+            System.out.println("Point rejected (" + x + ", " + y + ")");
+            return;
+        }
+        // if (points == null) {
+        // System.out.println("Point not found REVISIT THISSSS REJECT INVALID POINTS AND
+        // NOT FOUND IF POINT IS ACC NOT FOUND(" + x+ ", " + y + ")");
+        // return;
+        // }
         if (points.isEmpty()) {
-            System.out.println("No point found at (" + x + ", " + y + ")");
+            System.out.println("Point not found (" + x + ", " + y + ")");
             return;
         }
 
         // Assuming we're dealing with unique points or just removing the first
         // found
-        Point pointToRemove = points.get(0);
         quadTree.remove(pointToRemove); // Adjusted for hypothetical direct
                                         // removal
         skipList.remove(pointToRemove.getName());
@@ -202,12 +220,12 @@ public class PointsDatabase {
         // PRQuadTree
         List<Point> duplicates = quadTree.findDuplicates();
         if (duplicates.isEmpty()) {
-            System.out.println("No duplicates found.");
+            System.out.println("Duplicate points:");
             return;
         }
 
         for (Point duplicate : duplicates) {
-            System.out.println("Duplicate point: " + duplicate);
+            System.out.println("Duplicate points: " + duplicate);
         }
     }
 
@@ -224,7 +242,7 @@ public class PointsDatabase {
 
         // Check if the search result is empty
         if (pairs.isEmpty()) {
-            System.out.println("No point found with name " + name);
+            System.out.println("Point not found: " + name);
             return;
         }
 
@@ -244,12 +262,8 @@ public class PointsDatabase {
      * Dumps
      */
     public void dump() {
-        System.out.println("SkipList contents:");
-        skipList.dump(); // Assuming dump method in SkipList prints its contents
-
-        System.out.println("PRQuadTree contents:");
-        quadTree.dump(); // Implement this method in PRQuadTree to print its
-                         // contents
+        skipList.dump();
+        quadTree.dump();
     }
     
     

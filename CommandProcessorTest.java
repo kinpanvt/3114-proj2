@@ -15,8 +15,7 @@ import java.io.PrintStream;
  */
 public class CommandProcessorTest extends TestCase {
 
-    private final ByteArrayOutputStream outContent =
-        new ByteArrayOutputStream();
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
     private CommandProcessor cp;
 
@@ -32,7 +31,6 @@ public class CommandProcessorTest extends TestCase {
 
     }
 
-
     /**
      * Restores the standard output before each test.
      */
@@ -40,24 +38,23 @@ public class CommandProcessorTest extends TestCase {
         System.setOut(originalOut); // Resets System.out to its original state
     }
 
-
     /**
      * Helper method to test command processing and output.
      *
      * @param command
-     *            the command string to process
+     *                       the command string to process
      * @param expectedOutput
-     *            the expected output string
+     *                       the expected output string
      */
     private void testCommand(String command, String expectedOutput) {
         cp.processor(command);
         String actualOutput = outContent.toString().trim();
         assertTrue(
-            "Expected output not found in actual output. Actual output was: "
-                + actualOutput, actualOutput.contains(expectedOutput));
+                "Expected output not found in actual output. Actual output was: "
+                        + actualOutput,
+                actualOutput.contains(expectedOutput));
         outContent.reset(); // Clears the output stream for the next test
     }
-
 
     /**
      * Tests the insertion of rectangles with both valid and invalid parameters.
@@ -71,7 +68,6 @@ public class CommandProcessorTest extends TestCase {
         // Note: Adjust the invalid insert test if necessary, depending on how
         // your CommandProcessor handles invalid inputs.
     }
-
 
     /**
      * Tests the removal of rectangles by name, including both successful and
@@ -88,7 +84,6 @@ public class CommandProcessorTest extends TestCase {
         // Unsuccessful removal
         testCommand("remove b", "Rectangle not removed: b");
     }
-
 
     /**
      * Tests the removal of rectangles by dimensions, covering both cases where
@@ -109,7 +104,6 @@ public class CommandProcessorTest extends TestCase {
         testCommand("remove 2 0 4 8", "Rectangle not found: (2, 0, 4, 8)");
     }
 
-
     /**
      * Tests the 'regionsearch' command with various scenarios to verify that
      * the command processor
@@ -122,11 +116,10 @@ public class CommandProcessorTest extends TestCase {
         // Adjust these test cases to match the expected output of your
         // CommandProcessor
         testCommand("regionsearch 900 5 1000 1000",
-            "Rectangles intersecting region (900, 5, 1000, 1000):");
+                "Rectangles intersecting region (900, 5, 1000, 1000):");
         testCommand("regionsearch 0 500 20 1",
-            "Rectangles intersecting region (0, 500, 20, 1):");
+                "Rectangles intersecting region (0, 500, 20, 1):");
     }
-
 
     /**
      * Tests the 'intersections' command to ensure that the command processor
@@ -140,7 +133,6 @@ public class CommandProcessorTest extends TestCase {
     public void testIntersections() {
         testCommand("intersections", "Intersection pairs:");
     }
-
 
     /**
      * Tests the 'dump' command to ensure that the command processor correctly
@@ -160,13 +152,11 @@ public class CommandProcessorTest extends TestCase {
 
         try {
             cp.processor("dump");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             noErrors = false;
         }
         assertTrue(noErrors);
     }
-
 
     /**
      * Tests the 'dump' command to ensure that the command processor correctly
@@ -180,7 +170,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Tests insert()using negative coordinates
      * should not be able to insert the rectangle
@@ -188,10 +177,9 @@ public class CommandProcessorTest extends TestCase {
     public void testInsertWithNegativeXCoordinate() {
         cp.processor("insert rectNegX -1 10 20 30");
         assertTrue(outContent.toString().trim().contains("Rectangle rejected: "
-            + "(rectNegX, -1, 10, 20, 30)"));
+                + "(rectNegX, -1, 10, 20, 30)"));
         outContent.reset();
     }
-
 
     /**
      * Tests insert()with negative width
@@ -200,10 +188,9 @@ public class CommandProcessorTest extends TestCase {
     public void testInsertWithNonPositiveWidth() {
         cp.processor("insert rectZeroWidth 10 10 0 30");
         assertTrue(outContent.toString().trim().contains("Rectangle rejected: "
-            + "(rectZeroWidth, 10, 10, 0, 30)"));
+                + "(rectZeroWidth, 10, 10, 0, 30)"));
         outContent.reset();
     }
-
 
     /**
      * Tests insert() with too much width
@@ -212,10 +199,9 @@ public class CommandProcessorTest extends TestCase {
     public void testInsertWithExcessiveWidth() {
         cp.processor("insert rectExcessiveWidth 1023 10 2 30");
         assertTrue(outContent.toString().trim().contains("Rectangle rejected: "
-            + "(rectExcessiveWidth, 1023, 10, 2, 30)"));
+                + "(rectExcessiveWidth, 1023, 10, 2, 30)"));
         outContent.reset();
     }
-
 
     /**
      * Tests insert() with a valid rectangle
@@ -225,11 +211,10 @@ public class CommandProcessorTest extends TestCase {
         String command = "insert validRect 10 10 20 30";
         cp.processor(command);
         String expectedOutput = "Rectangle inserted: "
-            + "(validRect, 10, 10, 20, 30)";
+                + "(validRect, 10, 10, 20, 30)";
         assertTrue(outContent.toString().trim().contains(expectedOutput));
         outContent.reset();
     }
-
 
     /**
      * Tests insert() again with valid rectangle
@@ -238,10 +223,9 @@ public class CommandProcessorTest extends TestCase {
     public void testInsertValidRectangle() {
         cp.processor("insert rect1 100 100 20 30");
         assertTrue(outContent.toString().trim().contains("Rectangle inserted: "
-            + "(rect1, 100, 100, 20, 30)"));
+                + "(rect1, 100, 100, 20, 30)"));
         outContent.reset();
     }
-
 
     /**
      * Tests insert() with negative X values
@@ -253,7 +237,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Tests insert() with negative Y value
      * should not be able to insert the rectangle
@@ -263,7 +246,6 @@ public class CommandProcessorTest extends TestCase {
         assertTrue(outContent.toString().trim().contains("Rectangle rejected"));
         outContent.reset();
     }
-
 
     /**
      * Tests insert() with no width for rectangle
@@ -275,7 +257,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Tests insert() with 0 height for rectangle
      * should not be able to insert the rectangle
@@ -285,7 +266,6 @@ public class CommandProcessorTest extends TestCase {
         assertTrue(outContent.toString().trim().contains("Rectangle rejected"));
         outContent.reset();
     }
-
 
     /**
      * Tests insert() with rectangle outside max size
@@ -298,7 +278,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Tests insert() with rectangle outside max size
      * should not be able to insert the rectangle
@@ -310,7 +289,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Test the insert command with boundary coordinates and sizes.
      * should not be able to insert the rectangle
@@ -318,16 +296,15 @@ public class CommandProcessorTest extends TestCase {
     public void testInsertBoundaryConditions() {
         // Test insertion at the origin
         testCommand("insert origin 0 0 10 10", "Rectangle inserted: "
-            + "(origin, 0, 0, 10, 10)");
+                + "(origin, 0, 0, 10, 10)");
         // Test insertion at the maximum allowed coordinates and size, adjust
         // these values based on your system's limits
         testCommand("insert maxBoundary 1023 1023 1 1", "Rectangle inserted: "
-            + "(maxBoundary, 1023, 1023, 1, 1)");
+                + "(maxBoundary, 1023, 1023, 1, 1)");
         // Test insertion with coordinates and size exceeding limits
         testCommand("insert exceedBoundary 1024 1024 1 1",
-            "Rectangle rejected: " + "(exceedBoundary, 1024, 1024, 1, 1)");
+                "Rectangle rejected: " + "(exceedBoundary, 1024, 1024, 1, 1)");
     }
-
 
     /**
      * Test the insert command with invalid parameters.
@@ -336,16 +313,15 @@ public class CommandProcessorTest extends TestCase {
     public void testInsertInvalidParameters() {
         // Test insertion with negative dimensions
         testCommand("insert negSize -1 -1 -10 -10", "Rectangle rejected: "
-            + "(negSize, -1, -1, -10, -10)");
+                + "(negSize, -1, -1, -10, -10)");
         // Test insertion with zero dimensions
         testCommand("insert zeroSize 100 100 0 0", "Rectangle rejected: "
-            + "(zeroSize, 100, 100, 0, 0)");
+                + "(zeroSize, 100, 100, 0, 0)");
         // Test insertion with non-integer values, assuming processor method can
         // be modified to catch these
         testCommand("insert nonInteger 100 100 a b",
-            "Invalid number format for insert command.");
+                "Invalid number format for insert command.");
     }
-
 
     /**
      * Test remove command with non-existing entries.
@@ -358,7 +334,6 @@ public class CommandProcessorTest extends TestCase {
         testCommand("remove 0 0 10 10", "Rectangle not found: (0, 0, 10, 10)");
     }
 
-
     /**
      * Test regionsearch command with edge conditions.
      * should not be able to find the rectangles as they dont intersect
@@ -367,12 +342,11 @@ public class CommandProcessorTest extends TestCase {
         // Region search that matches exactly one rectangle's boundaries
         cp.processor("insert edgeRect 500 500 50 50");
         testCommand("regionsearch 500 500 50 50", "Rectangle inserted: "
-            + "(edgeRect, 500, 500, 50, 50)");
+                + "(edgeRect, 500, 500, 50, 50)");
         // Region search with no intersecting rectangles
         testCommand("regionsearch 0 0 1 1",
-            "No rectangles found intersecting the region");
+                "No rectangles found intersecting the region");
     }
-
 
     /**
      * Test intersections command for scenarios with and without intersections.
@@ -400,18 +374,17 @@ public class CommandProcessorTest extends TestCase {
         // Check for the presence of parts of the expected intersection
         // descriptions
         String[] expectedParts = new String[] { "(a, 10, 10, 15, 15)",
-            "(b, 11, 11, 5, 5)", "(c, 0, 0, 1000, 10)", "(d, 0, 0, 10, 1000)" };
+                "(b, 11, 11, 5, 5)", "(c, 0, 0, 1000, 10)", "(d, 0, 0, 10, 1000)" };
 
         // Loop through each part and check if it's present in the output
         for (String part : expectedParts) {
             assertTrue("Expected part not found in actual output: " + part,
-                output.contains(part));
+                    output.contains(part));
         }
 
         // Reset the output stream for the next test
         outContent.reset();
     }
-
 
     /**
      * Test search command for non-existing names.
@@ -420,7 +393,6 @@ public class CommandProcessorTest extends TestCase {
     public void testSearchNonExisting() {
         testCommand("search nonExisting", "Rectangle not found: (nonExisting)");
     }
-
 
     /**
      * Test dump command after various operations.
@@ -433,7 +405,6 @@ public class CommandProcessorTest extends TestCase {
         testCommand("dump", "SkipList dump:");
     }
 
-
     /**
      * Test when arr.length == 6 (true case)
      * should be able to insert the rectangle
@@ -443,7 +414,6 @@ public class CommandProcessorTest extends TestCase {
         assertTrue(outContent.toString().contains("Rectangle inserted:"));
     }
 
-
     /**
      * Test when arr.length != 6 (false case)
      * should not be able to insert the rectangle
@@ -452,7 +422,6 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("insert name 1 2 3");
         assertTrue(outContent.toString().contains("Invalid insert command."));
     }
-
 
     /**
      * Test remove by coordinates with arr.length == 5 (true case)
@@ -464,7 +433,6 @@ public class CommandProcessorTest extends TestCase {
         assertTrue(outContent.toString().contains("Rectangle removed:"));
     }
 
-
     /**
      * Test remove by coordinates with arr.length != 5 (false case)
      * should not be able to remove the rectangle
@@ -472,9 +440,8 @@ public class CommandProcessorTest extends TestCase {
     public void testRemoveByCoordinatesInvalid() {
         cp.processor("remove name");
         assertTrue(outContent.toString().contains(
-            "Rectangle not removed: name"));
+                "Rectangle not removed: name"));
     }
-
 
     /**
      * Test remove by name with numParam == 1 (true case)
@@ -486,7 +453,6 @@ public class CommandProcessorTest extends TestCase {
         assertTrue(outContent.toString().contains("Rectangle removed:"));
     }
 
-
     /**
      * Test regionsearch with arr.length == 5 (true case)
      * should be able to find the rectangle
@@ -494,9 +460,8 @@ public class CommandProcessorTest extends TestCase {
     public void testRegionSearchValid() {
         cp.processor("regionsearch 1 2 3 4");
         assertTrue(outContent.toString().contains(
-            "Rectangles intersecting region"));
+                "Rectangles intersecting region"));
     }
-
 
     /**
      * Test regionsearch with arr.length != 5 (false case)
@@ -505,9 +470,8 @@ public class CommandProcessorTest extends TestCase {
     public void testRegionSearchInvalid() {
         cp.processor("regionsearch 1 2 3");
         assertTrue(outContent.toString().contains(
-            "Invalid regionsearch command."));
+                "Invalid regionsearch command."));
     }
-
 
     /**
      * Test search with arr.length == 2 (true case)
@@ -519,7 +483,6 @@ public class CommandProcessorTest extends TestCase {
         assertTrue(outContent.toString().contains("Rectangles found:"));
     }
 
-
     /**
      * Test search with arr.length != 2 (false case)
      * should not be able to find the rectangle
@@ -527,9 +490,8 @@ public class CommandProcessorTest extends TestCase {
     public void testSearchInvalid() {
         cp.processor("search");
         assertTrue(outContent.toString().contains(
-            "Unrecognized command: search"));
+                "Unrecognized command: search"));
     }
-
 
     /**
      * Test dump command (true case)
@@ -538,7 +500,6 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("dump");
         assertTrue(outContent.toString().contains("SkipList dump:"));
     }
-
 
     /**
      * There's no direct false case for the dump command since it always
@@ -551,7 +512,6 @@ public class CommandProcessorTest extends TestCase {
                                          // command
         assertFalse(outContent.toString().contains("SkipList dump:"));
     }
-
 
     /**
      * Test insert() for incorrect arguments
@@ -567,7 +527,6 @@ public class CommandProcessorTest extends TestCase {
         assertTrue(outContent.toString().contains("Invalid insert command."));
         outContent.reset();
     }
-
 
     /**
      * Test remove() for incorrect args
@@ -589,7 +548,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Test search()for incorrect args
      * should not be able to find the rectangle
@@ -597,15 +555,14 @@ public class CommandProcessorTest extends TestCase {
     public void testSearchIncorrectArgs() {
         cp.processor("search"); // No arguments
         assertTrue(outContent.toString().contains(
-            "Unrecognized command: search"));
+                "Unrecognized command: search"));
         outContent.reset();
 
         cp.processor("search rect1 extraArg"); // Too many arguments
         assertTrue(outContent.toString().contains(
-            "Unrecognized command: search"));
+                "Unrecognized command: search"));
         outContent.reset();
     }
-
 
     /**
      * Tests regionsearch() for incorrect args
@@ -614,16 +571,15 @@ public class CommandProcessorTest extends TestCase {
     public void testRegionSearchIncorrectArgs() {
         cp.processor("regionsearch 200"); // Too few arguments
         assertTrue(outContent.toString().contains(
-            "Invalid regionsearch command."));
+                "Invalid regionsearch command."));
         outContent.reset();
 
         cp.processor("regionsearch 200 100 50 50 extraArg"); // Too many
                                                              // arguments
         assertTrue(outContent.toString().contains(
-            "Invalid regionsearch command."));
+                "Invalid regionsearch command."));
         outContent.reset();
     }
-
 
     /**
      * Tests insert()for invalid rectangles
@@ -638,7 +594,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Tests insert()for invalid dimensions
      * should not be able to insert the rectangle
@@ -651,7 +606,6 @@ public class CommandProcessorTest extends TestCase {
         // Reset the stream before next test
         outContent.reset();
     }
-
 
     /**
      * Tests insert()for invalid dimensions
@@ -666,7 +620,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Tests insert()for invalid dimensions
      * should not be able to insert the rectangle
@@ -679,7 +632,6 @@ public class CommandProcessorTest extends TestCase {
         // Reset the stream before next test
         outContent.reset();
     }
-
 
     /**
      * Tests insert()for invalid dimensions
@@ -694,7 +646,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Tests insert()for invalid dimensions
      * should not be able to insert the rectangle
@@ -707,7 +658,6 @@ public class CommandProcessorTest extends TestCase {
         // Reset the stream before next test
         outContent.reset();
     }
-
 
     /**
      * Tests insert()for invalid dimensions
@@ -722,7 +672,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Tests insert()for invalid dimensions
      * should not be able to insert the rectangle
@@ -735,7 +684,6 @@ public class CommandProcessorTest extends TestCase {
         // Reset the stream before next test
         outContent.reset();
     }
-
 
     /**
      * Test the dump command with correct usage.
@@ -752,12 +700,11 @@ public class CommandProcessorTest extends TestCase {
         // prints.
         String expectedOutput = "SkipList dump:";
         assertTrue("Dump command did not" + " produce the expected output.",
-            outContent.toString().trim().contains(expectedOutput));
+                outContent.toString().trim().contains(expectedOutput));
 
         // Cleanup: Reset the output stream for the next test.
         outContent.reset();
     }
-
 
     /**
      * Test the dump command with incorrect usage.
@@ -772,13 +719,13 @@ public class CommandProcessorTest extends TestCase {
         // Assertion: Verify the output indicates an invalid command.
         String expectedOutput = "Invalid command.";
         assertTrue("Invalid usage of dump command did not produce"
-            + " the expected output.", outContent.toString().trim().contains(
-                expectedOutput));
+                + " the expected output.",
+                outContent.toString().trim().contains(
+                        expectedOutput));
 
         // Cleanup: Reset the output stream for the next test.
         outContent.reset();
     }
-
 
     /**
      * tests remove() removing from different points
@@ -791,10 +738,9 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("remove firstRect");
         // Check if the removal was successful
         assertTrue(outContent.toString().trim().contains("Rectangle removed: "
-            + "(firstRect, 10, 20, 30, 40)"));
+                + "(firstRect, 10, 20, 30, 40)"));
         outContent.reset(); // Reset for the next test
     }
-
 
     /**
      * tests remove() removing from different points
@@ -808,12 +754,11 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("remove secondRect");
         // Check if the removal was successful
         assertEquals(outContent.toString().trim(),
-            ("Rectangle inserted: (firstRect, 10, 20, 30, 40)\n"
-                + "Rectangle inserted: (secondRect, 50, 60, 70, 80)\n"
-                + "Rectangle removed: (secondRect, 50, 60, 70, 80)"));
+                ("Rectangle inserted: (firstRect, 10, 20, 30, 40)\n"
+                        + "Rectangle inserted: (secondRect, 50, 60, 70, 80)\n"
+                        + "Rectangle removed: (secondRect, 50, 60, 70, 80)"));
         outContent.reset();
     }
-
 
     /**
      * tests remove() removing for a non-existing rectangle
@@ -824,10 +769,9 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("remove nonExistentRect");
         // Check if the correct error message is displayed
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle not removed: " + "nonExistentRect"));
+                "Rectangle not removed: " + "nonExistentRect"));
         outContent.reset();
     }
-
 
     /**
      * tests remove() by coords
@@ -842,14 +786,13 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("remove 100 200 300 400");
         // Verify only the matching rectangle is removed
         assertTrue(outContent.toString().trim().contains("Rectangle removed: "
-            + "(matchRect, 100, 200, 300, 400)"));
+                + "(matchRect, 100, 200, 300, 400)"));
         // Verify that other rectangles are not removed
         cp.processor("dump");
         assertTrue(outContent.toString().contains("firstRect") && outContent
-            .toString().contains("secondRect"));
+                .toString().contains("secondRect"));
         outContent.reset();
     }
-
 
     /**
      * tests remove() by coords
@@ -862,10 +805,9 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("remove 10 20 30 40");
         // Verify the appropriate error message is displayed
         assertTrue(outContent.toString().trim().contains("Rectangle not found: "
-            + "(10, 20, 30, 40)"));
+                + "(10, 20, 30, 40)"));
         outContent.reset();
     }
-
 
     /**
      * tests remove() by coords
@@ -878,10 +820,9 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("remove 10 20 30 40");
         // Verify the rectangle is removed successfully
         assertTrue(outContent.toString().trim().contains("Rectangle removed: ("
-            + "matchRect, 10, 20, 30, 40)"));
+                + "matchRect, 10, 20, 30, 40)"));
         outContent.reset();
     }
-
 
     /**
      * tests remove() by wrong coords
@@ -898,18 +839,18 @@ public class CommandProcessorTest extends TestCase {
 
         // Construct the expected message for not finding a rectangle
         String expectedOutput = "Rectangle not found: " + "(" + 100 + ", " + 100
-            + ", " + 50 + ", " + 50 + ")";
+                + ", " + 50 + ", " + 50 + ")";
 
         // Verify that the expected output is part of the actual console output
         assertTrue("Expected message for non-existent "
-            + "rectangle coordinates was not found. Actual output: "
-            + outContent.toString().trim(), outContent.toString().trim()
-                .contains(expectedOutput));
+                + "rectangle coordinates was not found. Actual output: "
+                + outContent.toString().trim(),
+                outContent.toString().trim()
+                        .contains(expectedOutput));
 
         // Reset the output stream for the next test
         outContent.reset();
     }
-
 
     /**
      * tests regionSearch with no rectangles
@@ -922,10 +863,9 @@ public class CommandProcessorTest extends TestCase {
 
         // Check for the "No rectangles found" message
         assertTrue(outContent.toString().trim().contains(
-            "No rectangles found intersecting the region"));
+                "No rectangles found intersecting the region"));
         outContent.reset();
     }
-
 
     /**
      * tests regionSearch with 1 rectangle
@@ -944,7 +884,6 @@ public class CommandProcessorTest extends TestCase {
         assertTrue(outContent.toString().trim().contains("rect1"));
         outContent.reset();
     }
-
 
     /**
      * tests regionSearch with many rectangles
@@ -968,7 +907,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * tests regionSearch with nothing in database
      * should not be able to find the rectangle
@@ -977,10 +915,9 @@ public class CommandProcessorTest extends TestCase {
         // Search in an area when the database is empty.
         cp.processor("regionsearch 0 0 100 100");
         assertTrue(outContent.toString().trim().contains(
-            "No rectangles found intersecting the region"));
+                "No rectangles found intersecting the region"));
         outContent.reset();
     }
-
 
     /**
      * tests regionSearch outside region
@@ -995,10 +932,9 @@ public class CommandProcessorTest extends TestCase {
         // rectangles
         cp.processor("regionsearch 50 50 50 50");
         assertTrue(outContent.toString().trim().contains(
-            "No rectangles found intersecting the region"));
+                "No rectangles found intersecting the region"));
         outContent.reset();
     }
-
 
     /**
      * tests regionSearch partially in region
@@ -1014,7 +950,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * tests regionSearch inside region
      * should be able to find the rectangle
@@ -1028,7 +963,6 @@ public class CommandProcessorTest extends TestCase {
         assertTrue(outContent.toString().trim().contains("rectWithin"));
         outContent.reset();
     }
-
 
     /**
      * tests regionSearch boundary conditions
@@ -1052,11 +986,11 @@ public class CommandProcessorTest extends TestCase {
         // This check depends on whether you have a rectangle at the edge; if
         // not, it should say no rectangles found.
         assertTrue(outContent.toString().trim().contains(
-            "No rectangles found intersecting the region") || outContent
-                .toString().trim().contains("rectBoundary"));
+                "No rectangles found intersecting the region")
+                || outContent
+                        .toString().trim().contains("rectBoundary"));
         outContent.reset();
     }
-
 
     /**
      * tests regionSearch()
@@ -1075,7 +1009,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * tests regionSearch empty database
      * should not be able to find the rectangle
@@ -1087,10 +1020,9 @@ public class CommandProcessorTest extends TestCase {
         // Check that the output indicates no rectangles found, meaning the loop
         // was skipped.
         assertTrue(outContent.toString().trim().contains(
-            "No rectangles found intersecting the region"));
+                "No rectangles found intersecting the region"));
         outContent.reset();
     }
-
 
     /**
      * tests regionSearch no intersections
@@ -1105,10 +1037,9 @@ public class CommandProcessorTest extends TestCase {
 
         // Verify that the output indicates no intersecting rectangles.
         assertTrue(outContent.toString().trim().contains(
-            "No rectangles found intersecting the region"));
+                "No rectangles found intersecting the region"));
         outContent.reset();
     }
-
 
     /**
      * tests regionSearch nothing found
@@ -1126,10 +1057,9 @@ public class CommandProcessorTest extends TestCase {
         // Check that the output correctly indicates no rectangles were found
         // intersecting the region.
         assertTrue(outContent.toString().trim().contains(
-            "No rectangles found intersecting the region"));
+                "No rectangles found intersecting the region"));
         outContent.reset();
     }
-
 
     /**
      * tests intersection nothing intersecting
@@ -1148,7 +1078,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * tests intersection nothing found
      * should be able to find the rectangles
@@ -1166,7 +1095,6 @@ public class CommandProcessorTest extends TestCase {
         assertTrue(outContent.toString().trim().contains("(rect1"));
         outContent.reset();
     }
-
 
     /**
      * tests intersection with multiple tests
@@ -1189,7 +1117,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Testing insert() with invalid rectangle
      * should not be able to insert the rectangle
@@ -1205,7 +1132,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Testing insert() invalid parameters
      * should not be able to insert the rectangle
@@ -1214,16 +1140,15 @@ public class CommandProcessorTest extends TestCase {
         // Insert rectangle with zero width
         cp.processor("insert zeroWidthRect 10 10 0 20");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected:"));
+                "Rectangle rejected:"));
         outContent.reset();
 
         // Insert rectangle with negative height
         cp.processor("insert negHeightRect 20 20 20 -1");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected:"));
+                "Rectangle rejected:"));
         outContent.reset();
     }
-
 
     /**
      * Testing insert() with invalid parameters
@@ -1233,17 +1158,16 @@ public class CommandProcessorTest extends TestCase {
         // Insert rectangle with negative xCoordinate
         cp.processor("insert negXCoordRect -1 10 10 10");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected:"));
+                "Rectangle rejected:"));
         outContent.reset();
 
         // Assuming 1024 is your canvas size and inserting a rectangle that
         // exceeds this boundary
         cp.processor("insert exceedXCoordRect 1025 10 10 10");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected:"));
+                "Rectangle rejected:"));
         outContent.reset();
     }
-
 
     /**
      * Testing insert() with invalid rectangle
@@ -1254,10 +1178,9 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("insert invalidRect -10 -10 -20 -20");
         // Check that the rectangle is rejected
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected:"));
+                "Rectangle rejected:"));
         outContent.reset();
     }
-
 
     /**
      * Testing insert() with invalid parameters
@@ -1267,16 +1190,15 @@ public class CommandProcessorTest extends TestCase {
         // Zero Width
         cp.processor("insert zeroWidth 10 10 0 20");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected:"));
+                "Rectangle rejected:"));
 
         // Negative Height
         cp.processor("insert negHeight 20 20 20 -1");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected:"));
+                "Rectangle rejected:"));
 
         outContent.reset();
     }
-
 
     /**
      * Testing insert()with edge parameters
@@ -1286,7 +1208,7 @@ public class CommandProcessorTest extends TestCase {
         // Negative xCoordinate
         cp.processor("insert negXCoord -1 10 10 10");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected:"));
+                "Rectangle rejected:"));
 
         // xCoordinate at the boundary (assuming 1024 is max)
         cp.processor("insert maxXCoord 1024 10 1 1");
@@ -1294,11 +1216,10 @@ public class CommandProcessorTest extends TestCase {
         // bounds
         // Adjust the assertion based on your application logic
         assertTrue(outContent.toString().trim().contains("Rectangle inserted:")
-            || outContent.toString().trim().contains("Rectangle rejected:"));
+                || outContent.toString().trim().contains("Rectangle rejected:"));
 
         outContent.reset();
     }
-
 
     /**
      * Testing remove() null
@@ -1309,10 +1230,9 @@ public class CommandProcessorTest extends TestCase {
         // Assuming your system prints a specific message for null names
         // Adjust the expected message based on your actual implementation
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle not removed: null"));
+                "Rectangle not removed: null"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove() with name
@@ -1323,10 +1243,9 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("insert validName 10 10 20 20");
         cp.processor("remove validName");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle removed: (validName"));
+                "Rectangle removed: (validName"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove() no name
@@ -1336,10 +1255,9 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("remove nonExistingName");
         // Verify the output indicates the name was not found for removal
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle not removed: nonExistingName"));
+                "Rectangle not removed: nonExistingName"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove() with coords
@@ -1353,7 +1271,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Testing remove() invalid coords
      * should not be able to remove the rectangle
@@ -1362,10 +1279,9 @@ public class CommandProcessorTest extends TestCase {
         // Test with negative x and y, challenging the x < 0 || y < 0 mutation
         cp.processor("remove -1 -1 10 10");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected:"));
+                "Rectangle rejected:"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove() with invalid parameters
@@ -1376,10 +1292,9 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("remove 1023 1023 2 2"); // This attempts to exceed the
                                               // canvas size
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected:"));
+                "Rectangle rejected:"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove()with edge parameters
@@ -1391,7 +1306,7 @@ public class CommandProcessorTest extends TestCase {
                                               // interpretation may be inside or
                                               // outside
         assertTrue(outContent.toString().trim().contains("Rectangle rejected:")
-            || outContent.toString().trim().contains("Rectangle removed:"));
+                || outContent.toString().trim().contains("Rectangle removed:"));
         outContent.reset();
         cp.processor("insert x 1023 1023 1 1");
         // Testing just inside the canvas size
@@ -1399,7 +1314,6 @@ public class CommandProcessorTest extends TestCase {
         assertTrue(outContent.toString().trim().contains("Rectangle removed:"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove() with invalid rectangle
@@ -1409,7 +1323,7 @@ public class CommandProcessorTest extends TestCase {
         // Negative dimensions
         cp.processor("remove -10 -10 -20 -20");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected: (-10, -10, -20, -20)"));
+                "Rectangle rejected: (-10, -10, -20, -20)"));
 
         // Reset the output for the next test
         outContent.reset();
@@ -1418,11 +1332,10 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("remove 1023 1023 10 10"); // Assuming your canvas size is
                                                 // 1024x1024
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected: (1023, 1023, 10, 10)"));
+                "Rectangle rejected: (1023, 1023, 10, 10)"));
 
         outContent.reset();
     }
-
 
     /**
      * Testing remove() with rectangle
@@ -1435,11 +1348,10 @@ public class CommandProcessorTest extends TestCase {
         // Attempt to remove the same rectangle
         cp.processor("remove 10 10 20 20");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle removed: (testRect, 10, 10, 20, 20)"));
+                "Rectangle removed: (testRect, 10, 10, 20, 20)"));
 
         outContent.reset();
     }
-
 
     /**
      * Testing remove() with no rectangles
@@ -1449,11 +1361,10 @@ public class CommandProcessorTest extends TestCase {
         // Attempt to remove a rectangle that has not been inserted
         cp.processor("remove 30 30 40 40");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle not found: (30, 30, 40, 40)"));
+                "Rectangle not found: (30, 30, 40, 40)"));
 
         outContent.reset();
     }
-
 
     /**
      * Testing remove() boundary conditions
@@ -1463,10 +1374,9 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("insert rectToRemove 100 100 50 50");
         cp.processor("remove 100 100 50 50");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle removed: (rectToRemove, 100, 100, 50, 50)"));
+                "Rectangle removed: (rectToRemove, 100, 100, 50, 50)"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove() invalid parameters
@@ -1476,10 +1386,9 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("insert rectToNotRemove 1000 10 30 10");
         cp.processor("remove 1000 10 30 10");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected: (1000, 10, 30, 10)"));
+                "Rectangle rejected: (1000, 10, 30, 10)"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove() boundary conditions
@@ -1489,10 +1398,9 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("insert rectAtBoundary 0 0 1024 1024");
         cp.processor("remove 0 0 1024 1024");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle removed: (rectAtBoundary, 0, 0, 1024, 1024)"));
+                "Rectangle removed: (rectAtBoundary, 0, 0, 1024, 1024)"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove() invalid conditions
@@ -1501,15 +1409,14 @@ public class CommandProcessorTest extends TestCase {
     public void testRemoveRectangleZeroWidthOrHeight() {
         cp.processor("remove 10 10 0 20");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected: (10, 10, 0, 20)"));
+                "Rectangle rejected: (10, 10, 0, 20)"));
         outContent.reset();
 
         cp.processor("remove 10 10 20 0");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected: (10, 10, 20, 0)"));
+                "Rectangle rejected: (10, 10, 20, 0)"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove() invalid conditions
@@ -1518,15 +1425,14 @@ public class CommandProcessorTest extends TestCase {
     public void testRemoveRectangleNegativeXorY() {
         cp.processor("remove -10 10 20 20");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected: (-10, 10, 20, 20)"));
+                "Rectangle rejected: (-10, 10, 20, 20)"));
         outContent.reset();
 
         cp.processor("remove 10 -10 20 20");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected: (10, -10, 20, 20)"));
+                "Rectangle rejected: (10, -10, 20, 20)"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove() with boundary conditions
@@ -1539,7 +1445,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Testing remove() invalid conditions
      * should not be able to remove the rectangle
@@ -1547,10 +1452,9 @@ public class CommandProcessorTest extends TestCase {
     public void testRemoveRectangleExceedingBoundary() {
         cp.processor("remove 1023 1023 2 2");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected: (1023, 1023, 2, 2)"));
+                "Rectangle rejected: (1023, 1023, 2, 2)"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove() non existing rectangle
@@ -1559,10 +1463,9 @@ public class CommandProcessorTest extends TestCase {
     public void testRemoveValidRectangleNotExisting() {
         cp.processor("remove 50 50 10 10");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle not found: (50, 50, 10, 10)"));
+                "Rectangle not found: (50, 50, 10, 10)"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove() where 'x + w' is replaced by 'x'
@@ -1573,10 +1476,9 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("insert rectWithWidth 10 10 1015 10");
         cp.processor("remove 10 10 1015 10");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected:"));
+                "Rectangle rejected:"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove()where 'x + w' is replaced by 'w'
@@ -1587,10 +1489,9 @@ public class CommandProcessorTest extends TestCase {
         cp.processor("insert rectWithWidth 20 20 1004 10");
         cp.processor("remove 20 20 1004 10");
         assertFalse(outContent.toString().trim().contains(
-            "Rectangle rejected:"));
+                "Rectangle rejected:"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove()rejecting invalid rectangles
@@ -1601,10 +1502,9 @@ public class CommandProcessorTest extends TestCase {
         // that invalid rectangles are still rejected correctly.
         cp.processor("remove -1 -1 1026 1026");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected: (-1, -1, 1026, 1026)"));
+                "Rectangle rejected: (-1, -1, 1026, 1026)"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove() rectangle doesnt exist
@@ -1614,10 +1514,9 @@ public class CommandProcessorTest extends TestCase {
         // Attempt to remove a rectangle that does not exist
         cp.processor("remove 10 10 20 20");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle not found: (10, 10, 20, 20)"));
+                "Rectangle not found: (10, 10, 20, 20)"));
         outContent.reset();
     }
-
 
     /**
      * Testing remove()
@@ -1630,12 +1529,11 @@ public class CommandProcessorTest extends TestCase {
         // Then attempt to remove it
         cp.processor("remove 10 10 20 20");
         assertFalse(outContent.toString().trim().contains(
-            "Rectangle not found: (10, 10, 20, 20)"));
+                "Rectangle not found: (10, 10, 20, 20)"));
         assertTrue(outContent.toString().trim().contains("Rectangle removed:"));
 
         outContent.reset();
     }
-
 
     /**
      * Testing remove() rectangle found
@@ -1648,12 +1546,11 @@ public class CommandProcessorTest extends TestCase {
         // Then attempt to remove it
         cp.processor("remove 30 30 40 40");
         assertFalse(outContent.toString().trim().contains(
-            "Rectangle not found: (30, 30, 40 40)"));
+                "Rectangle not found: (30, 30, 40 40)"));
         assertTrue(outContent.toString().trim().contains("Rectangle removed:"));
 
         outContent.reset();
     }
-
 
     /**
      * Testing regionSearch() invalid area
@@ -1663,10 +1560,9 @@ public class CommandProcessorTest extends TestCase {
         // Define an invalid region (negative dimensions)
         cp.processor("regionsearch -10 -10 -5 -5");
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle rejected: (-10, -10, -5, -5)"));
+                "Rectangle rejected: (-10, -10, -5, -5)"));
         outContent.reset();
     }
-
 
     /**
      * Testing regionSearch() no intersecting rectangles
@@ -1678,10 +1574,9 @@ public class CommandProcessorTest extends TestCase {
         // the area (10, 10, 5, 5)
         cp.processor("regionsearch 10 10 5 5");
         assertTrue(outContent.toString().trim().contains(
-            "No rectangles found intersecting the region"));
+                "No rectangles found intersecting the region"));
         outContent.reset();
     }
-
 
     /**
      * Testing regionSearch()intersecting rectangles
@@ -1698,10 +1593,9 @@ public class CommandProcessorTest extends TestCase {
         assertTrue(outContent.toString().trim().contains("(rect1"));
         assertTrue(outContent.toString().trim().contains("(rect2"));
         assertFalse(outContent.toString().trim().contains(
-            "No rectangles found intersecting the region"));
+                "No rectangles found intersecting the region"));
         outContent.reset();
     }
-
 
     /**
      * Testing intersection()non-intersecting rectangles
@@ -1719,10 +1613,9 @@ public class CommandProcessorTest extends TestCase {
         // Verify no intersection pairs are printed
         assertFalse(outContent.toString().trim().contains("|"));
         assertTrue(outContent.toString().trim().contains(
-            "Intersection pairs:"));
+                "Intersection pairs:"));
         outContent.reset();
     }
-
 
     /**
      * Testing intersection() some intersecting rectangles
@@ -1741,11 +1634,10 @@ public class CommandProcessorTest extends TestCase {
 
         // Verify that the intersection pairs are printed
         assertTrue(outContent.toString().trim().contains(
-            "((rect1, 10, 10, 20, 20) | (rect2, 15, 15, 25, 25))"));
+                "((rect1, 10, 10, 20, 20) | (rect2, 15, 15, 25, 25))"));
         assertFalse(outContent.toString().trim().contains("(rect3 |"));
         outContent.reset();
     }
-
 
     /**
      * Testing intersection()
@@ -1763,11 +1655,10 @@ public class CommandProcessorTest extends TestCase {
         // 'found' must have been set to true
         String output = outContent.toString().trim();
         assertTrue(output.contains(
-            "((rect1, 10, 10, 20, 20) | (rect2, 15, 15, 25, 25))"));
+                "((rect1, 10, 10, 20, 20) | (rect2, 15, 15, 25, 25))"));
 
         outContent.reset();
     }
-
 
     /**
      * Testing search() rectangle found
@@ -1786,7 +1677,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Testing search() no rectangle found
      * should not be able to find the rectangle
@@ -1797,10 +1687,9 @@ public class CommandProcessorTest extends TestCase {
 
         // We expect to see "Rectangle not found:"
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle not found: (nonExistentRect)"));
+                "Rectangle not found: (nonExistentRect)"));
         outContent.reset();
     }
-
 
     /**
      * Testing search() for false and true
@@ -1817,10 +1706,9 @@ public class CommandProcessorTest extends TestCase {
         // We want to ensure that no rectangle is found in this case
         assertFalse(outContent.toString().trim().contains("Rectangles found:"));
         assertTrue(outContent.toString().trim().contains(
-            "Rectangle not found: (definitelyNotRectTrueCheck)"));
+                "Rectangle not found: (definitelyNotRectTrueCheck)"));
         outContent.reset();
     }
-
 
     /**
      * Testing search()
@@ -1841,7 +1729,6 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
     }
 
-
     /**
      * Test search command by name with both found and not found scenarios.
      * should be able to find the rectangle
@@ -1859,4 +1746,94 @@ public class CommandProcessorTest extends TestCase {
         outContent.reset();
 
     }
+
+
+    /**
+     * 
+     */
+    public void testInsertWithinBounds() {
+        db.insert("Point1", 100, 100);
+        assertFalse(db.getPointsByName("Point1").isEmpty());
+    }
+
+    /**
+     * 
+     */
+    public void testInsertXOutOfBounds() {
+        db.insert("Point2", -1, 100);
+        assertTrue(db.getPointsByName("Point2").isEmpty());
+    }
+
+    /**
+     * 
+     */
+    public void testInsertYOutOfBounds() {
+        db.insert("Point3", 100, 1024 + 1);
+        assertTrue(db.getPointsByName("Point3").isEmpty());
+    }
+
+    /**
+     * 
+     */
+    public void testInsertDuplicateName() {
+        db.insert("Point4", 100, 100);
+        db.insert("Point4", 200, 200); // Attempt to insert duplicate name
+        List<Point> points = db.getPointsByName("Point4");
+        assertEquals(1, points.size()); // Ensure only one point with the name
+                                        // exists
+    }
+
+    /**
+     * 
+     */
+    public void testInsertUniquePoint() {
+        db.insert("Point5", 300, 300);
+        assertFalse(db.getPointsByName("Point5").isEmpty());
+    }
+
+    /**
+     * 
+     */
+    public void testInsertWithinBounds1() {
+        db.insert("Point1", 100, 100);
+        assertFalse(db.getPointsByName("Point1").isEmpty());
+    }
+
+    /**
+     * 
+     */
+    public void testInsertXOutOfBounds1() {
+        db.insert("Point2", -1, 100);
+        assertTrue(db.getPointsByName("Point2").isEmpty());
+    }
+
+    /**
+     * 
+     */
+    public void testInsertYOutOfBounds1() {
+        db.insert("Point3", 100, 1024 + 1);
+        assertTrue(db.getPointsByName("Point3").isEmpty());
+    }
+
+    /**
+     * 
+     */
+    public void testInsertDuplicateName1() {
+        db.insert("Point4", 100, 100);
+        db.insert("Point4", 200, 200); // Attempt to insert duplicate name
+        // Check if the point with the new coordinates was not inserted
+        boolean duplicateExists = db.getPointsByName("Point4").stream()
+                .anyMatch(point -> point.getX() == 200 && point.getY() == 200);
+        assertFalse(duplicateExists);
+    }
+
+    /**
+     * 
+     */
+    public void testInsertUniquePoint1() {
+        db.insert("Point5", 300, 300);
+        assertFalse(db.getPointsByName("Point5").isEmpty());
+    }
+
+
 }
