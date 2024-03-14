@@ -17,7 +17,7 @@
             "request": "launch",
             "mainClass": "PointsDatabase",
             "projectName": "3114-proj2-main",
-            "args": "SyntaxTest2.txt",
+            "args": "test.txt",
         },
         {
             "type": "java",

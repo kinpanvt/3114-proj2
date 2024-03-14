@@ -236,7 +236,7 @@ public class SkipList<K extends Comparable<? super K>, V>
         SkipNode current = head.forward[0];
         while (current != null) {
             System.out.println("Node has depth " + (current.level + 1)
-                    + ", value " + current.element());
+                    + ", value " + "(" + current.element() + ")");
             current = current.forward[0];
         }
         System.out.println("SkipList size is: " + size);

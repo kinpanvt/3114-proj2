@@ -41,7 +41,7 @@ public class PointTest extends TestCase {
      */
     public void testToString() {
         // Test toString
-        String expectedOutput = "TestPoint (50, 75)";
+        String expectedOutput = "TestPoint 50 75";
         assertEquals("toString should return the correct format",
             expectedOutput, point.toString());
     }

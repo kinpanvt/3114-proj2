@@ -4,31 +4,82 @@ public class PRQuadTree {
     private QuadTreeNode root;
     private final int size;
 
+    /**
+     * Constructs a PRQuadTree with the specified size.
+     * 
+     * @param size the size of the QuadTree
+     */
     public PRQuadTree(int size) {
         this.root = FlyweightNode.getInstance();
         this.size = size;
     }
 
+    /**
+     * Inserts a point into the QuadTree.
+     * 
+     * @param point the point to be inserted
+     */
     public void insert(Point point) {
         root = root.insert(point, 0, 0, size);
     }
 
+    /**
+     * Removes a point from the QuadTree.
+     * 
+     * @param point the point to be removed
+     * @return true if the point was removed, false otherwise
+     */
     public boolean remove(Point point) {
         return root.remove(point, 0, 0, size);
     }
 
+    /**
+     * Searches for points within a specified region in the QuadTree.
+     * 
+     * @param x      the x-coordinate of the top-left corner of the region
+     * @param y      the y-coordinate of the top-left corner of the region
+     * @param width  the width of the region
+     * @param height the height of the region
+     * @return a list of points within the specified region
+     */
     public ArrayList<Point> regionSearch(int x, int y, int width, int height) {
         return root.regionSearch(x, y, width, height, 0, 0, size);
     }
 
+    /**
+     * Searches for points by name in the QuadTree.
+     * 
+     * @param name the name of the points to search for
+     * @return a list of points with the specified name
+     */
     public ArrayList<Point> searchByName(String name) {
         return root.search(name);
     }
 
+    /**
+     * Searches for a point by coordinates in the QuadTree.
+     * 
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @return the point with the specified coordinates, or null if no such point
+     *         exists
+     */
     public Point searchByCoordinates(int x, int y) {
         return searchByCoordinates(root, x, y, 0, 0, size);
     }
 
+    /**
+     * Searches for a point by coordinates in the QuadTree.
+     * 
+     * @param node       the node to start the search from
+     * @param x          the x-coordinate of the point
+     * @param y          the y-coordinate of the point
+     * @param startX     the x-coordinate of the starting point of the search region
+     * @param startY     the y-coordinate of the starting point of the search region
+     * @param regionSize the size of the search region
+     * @return the point with the specified coordinates, or null if no such point
+     *         exists
+     */
     private Point searchByCoordinates(QuadTreeNode node, int x, int y, int startX, int startY, int regionSize) {
         if (node == null || node instanceof FlyweightNode) {
             return null;
@@ -56,12 +107,23 @@ public class PRQuadTree {
         return null;
     }
 
+    /**
+     * Finds duplicate points in the QuadTree.
+     * 
+     * @return a list of duplicate points
+     */
     public ArrayList<Point> findDuplicates() {
         ArrayList<Point> allPoints = new ArrayList<>();
         collectPoints(root, allPoints);
         return identifyDuplicates(allPoints);
     }
 
+    /**
+     * Collects all points in the QuadTree.
+     * 
+     * @param node      the node to start the collection from
+     * @param allPoints the list to store the collected points
+     */
     private void collectPoints(QuadTreeNode node, ArrayList<Point> allPoints) {
         if (node == null || node instanceof FlyweightNode) {
             return;
@@ -75,6 +137,12 @@ public class PRQuadTree {
         }
     }
 
+    /**
+     * Identifies duplicate points in a list of points.
+     * 
+     * @param allPoints the list of points to check for duplicates
+     * @return a list of duplicate points
+     */
     private ArrayList<Point> identifyDuplicates(ArrayList<Point> allPoints) {
         ArrayList<Point> duplicates = new ArrayList<>();
         for (int i = 0; i < allPoints.size(); i++) {
@@ -91,11 +159,20 @@ public class PRQuadTree {
         return duplicates;
     }
 
+    /**
+     * Prints the structure of the QuadTree.
+     */
     public void dump() {
         System.out.println("QuadTree Dump:");
         dump(root, 0);
     }
 
+    /**
+     * Prints the structure of a node in the QuadTree.
+     * 
+     * @param node  the node to print
+     * @param depth the depth of the node in the QuadTree
+     */
     private void dump(QuadTreeNode node, int depth) {
         int nodesPrinted = 0;
         if (node == null) {
@@ -122,6 +199,11 @@ public class PRQuadTree {
         System.out.println(nodesPrinted + " quadtree nodes printed");
     }
 
+    /**
+     * Prints a number of indents.
+     * 
+     * @param depth the number of indents to print
+     */
     private void printIndent(int depth) {
         for (int i = 0; i < depth; i++) {
             System.out.print("  ");

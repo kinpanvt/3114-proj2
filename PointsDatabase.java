@@ -127,8 +127,12 @@ public class PointsDatabase {
      */
     public void remove(String name) {
         List<Point> points = getPointsFromSkipList(name); // Use the utility method
-        if (points == null || points.isEmpty()) {
-            System.out.println("Point removed: ");
+        if (points == null) {
+            System.out.println("Point not found: " + name);
+            return;
+        }
+        if (points.isEmpty()) {
+            System.out.println("Point not removed: " + name);
             return;
         }
 
@@ -151,6 +155,14 @@ public class PointsDatabase {
         // coordinates
         @SuppressWarnings("unchecked")
         List<Point> points = (List<Point>) quadTree.searchByCoordinates(x, y);
+        if (points == null) {
+            System.out.println("Point not found: (" + x + ", " + y + ")");
+            return;
+        }
+        if (points.get(0).isValid() == false) {
+            System.out.println("Point rejected (" + x + ", " + y + ")");
+            return;
+        }
         Point pointToRemove = points.get(0);
         if (points.get(0).isValid() == false) {
             System.out.println("Point rejected (" + x + ", " + y + ")");
@@ -230,7 +242,7 @@ public class PointsDatabase {
 
         // Check if the search result is empty
         if (pairs.isEmpty()) {
-            System.out.println("No point found with name " + name);
+            System.out.println("Point not found: " + name);
             return;
         }
 
