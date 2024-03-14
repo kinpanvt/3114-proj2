@@ -30,10 +30,10 @@ public class InternalNode extends QuadTreeNode {
     }
 
     /**
-     * Inserts a point into the appropriate quadrant of this internal node.
+     * Finds the quadrant a point belongs to.
      *
      * @param point
-     *              The point to insert.
+     *              The point to find.
      * @param x
      *              The x-coordinate of the upper left corner of the current
      *              region.
@@ -42,16 +42,43 @@ public class InternalNode extends QuadTreeNode {
      *              region.
      * @param size
      *              The size of the current region.
-     * @return
+     * @return The quadrant the point belongs to.
      */
-
-    @Override
-    public QuadTreeNode insert(Point point, int x, int y, int size) {
+    private QuadTreeNode findQuadrant(Point point, int x, int y, int size) {
         int halfSize = size / 2;
         int midX = x + halfSize;
         int midY = y + halfSize;
 
-        // Determine which quadrant the point belongs to and insert it there.
+        // Determine which quadrant the point belongs to.
+        if (point.getX() < midX) {
+            if (point.getY() < midY) {
+                return nw; // NW quadrant
+            } else {
+                return sw; // SW quadrant
+            }
+        } else {
+            if (point.getY() < midY) {
+                return ne; // NE quadrant
+            } else {
+                return se; // SE quadrant
+            }
+        }
+    }
+
+    @Override
+    public QuadTreeNode insert(Point point, int x, int y, int size) {
+        QuadTreeNode quadrant = findQuadrant(point, x, y, size);
+
+        // Check if the point already exists in the quadrant.
+        if (quadrant.search(point.getName()).contains(point)) {
+            return this; // Return this internal node without inserting the point.
+        }
+
+        // Insert the point if it does not exist.
+        int halfSize = size / 2;
+        int midX = x + halfSize;
+        int midY = y + halfSize;
+
         if (point.getX() < midX) {
             if (point.getY() < midY) {
                 nw = nw.insert(point, x, y, halfSize); // NW quadrant
