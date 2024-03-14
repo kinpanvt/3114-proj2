@@ -1,7 +1,7 @@
-import student.TestCase;
+import student.TestCase; 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.List;
+
 
 /**
  * This class tests the CommandProcessor class.
@@ -18,7 +18,6 @@ public class CommandProcessorTest extends TestCase {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
     private CommandProcessor cp;
-    private PointsDatabase db;
 
     /**
      * The setUp() method will be called automatically before
@@ -29,7 +28,7 @@ public class CommandProcessorTest extends TestCase {
     public void setUp() {
         System.setOut(new PrintStream(outContent));
         cp = new CommandProcessor();
-        db = new PointsDatabase();
+
     }
 
     /**
@@ -1748,6 +1747,7 @@ public class CommandProcessorTest extends TestCase {
 
     }
 
+
     /**
      * 
      */
@@ -1834,5 +1834,6 @@ public class CommandProcessorTest extends TestCase {
         db.insert("Point5", 300, 300);
         assertFalse(db.getPointsByName("Point5").isEmpty());
     }
+
 
 }

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -31,12 +32,16 @@ public class Database {
     // You will need to define an extra Iterator for the intersections method.
     private Iterator<KVPair<String, Rectangle>> itr1;
 
+    // Integrating Point objects into Database
+    private SkipList<String, Point> pointsByName;
     /**
      * The constructor for this class initializes a SkipList object with String
      * and Rectangle a its parameters.
      */
     public Database() {
         list = new SkipList<String, Rectangle>();
+        pointsByName = new SkipList<>();
+        /***********PRQuadTree init*********/
     }
 
 
@@ -255,5 +260,29 @@ public class Database {
     public void dump() {
         list.dump();
     }
+    
+    
+    
+    
+    
+    
+    //------------------------------------------
 
+    
+    
+    public void insertPoint(String name, int x, int y) {
+        Point point = new Point(name, x, y);
+        KVPair<String, Point> pair = new KVPair<>(name, point);
+        pointsByName.insert(pair);
+    }
+
+    public void searchByName(String name) {
+        // Search in SkipList. similar structure to ArrayList<KVPair<String, Point>>
+        ArrayList<KVPair<String, Point>> searchResults = pointsByName.search(name);
+        if (searchResults != null) {
+            System.out.println(searchResults);
+        } else {
+            System.out.println("No point found with name: " + name);
+        }
+    }
 }
