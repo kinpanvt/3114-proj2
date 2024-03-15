@@ -34,6 +34,34 @@ public class PRQuadTree {
     }
 
     /**
+     * Returns the number of points in the QuadTree.
+     * 
+     * @return the number of points in the QuadTree
+     */
+    public int numOfPoints() {
+        return numOfPoints(root);
+    }
+
+    /**
+     * Returns the number of points in a node.
+     * 
+     * @param node the node to count the points in
+     * @return the number of points in the node
+     */
+    private int numOfPoints(QuadTreeNode node) {
+        if (node == null || node instanceof FlyweightNode) {
+            return 0;
+        } else if (node instanceof LeafNode) {
+            return ((LeafNode) node).getPoints().size();
+        } else if (node instanceof InternalNode) {
+            InternalNode internalNode = (InternalNode) node;
+            return numOfPoints(internalNode.getNw()) + numOfPoints(internalNode.getNe())
+                    + numOfPoints(internalNode.getSw()) + numOfPoints(internalNode.getSe());
+        }
+        return 0;
+    }
+
+    /**
      * Searches for points within a specified region in the QuadTree.
      * 
      * @param x      the x-coordinate of the top-left corner of the region
@@ -164,39 +192,35 @@ public class PRQuadTree {
      */
     public void dump() {
         System.out.println("QuadTree Dump:");
-        dump(root, 0);
+        dump(root, 0, 0, size, 0);
     }
 
     /**
      * Prints the structure of a node in the QuadTree.
      * 
-     * @param node  the node to print
+     * @param node  the node to prints
      * @param depth the depth of the node in the QuadTree
      */
-    private void dump(QuadTreeNode node, int depth) {
-        int nodesPrinted = 0;
-        if (node == null) {
+    private void dump(QuadTreeNode node, int x, int y, int regionSize, int depth) {
+        if (node == null || node instanceof FlyweightNode) {
             printIndent(depth);
-            System.out.println("Node at 0, 0" + size + ": Empty");
-            nodesPrinted++;
-        }
-        if (node instanceof InternalNode) {
-            printIndent(depth);
-            System.out.println("Internal");
-            nodesPrinted++;
+            System.out.println("Node at " + x + ", " + y + ", " + regionSize + ": Empty");
         } else if (node instanceof LeafNode) {
             LeafNode leafNode = (LeafNode) node;
             printIndent(depth);
             for (Point point : leafNode.getPoints()) {
-                System.out.println("Leaf: " + point);
-                nodesPrinted++;
+                System.out.println("Node at " + x + ", " + y + ", " + regionSize + ": Leaf");
             }
-        } else if (node instanceof FlyweightNode) {
+        } else if (node instanceof InternalNode) {
+            InternalNode internalNode = (InternalNode) node;
             printIndent(depth);
-            System.out.println("Node at 0, 0, " + size + ": Empty");
-            nodesPrinted++;
+            System.out.println("Node at " + x + ", " + y + ", " + regionSize + ": Internal");
+            int halfSize = regionSize / 2;
+            dump(internalNode.getNw(), x, y, halfSize, depth + 1);
+            dump(internalNode.getNe(), x + halfSize, y, halfSize, depth + 1);
+            dump(internalNode.getSw(), x, y + halfSize, halfSize, depth + 1);
+            dump(internalNode.getSe(), x + halfSize, y + halfSize, halfSize, depth + 1);
         }
-        System.out.println(nodesPrinted + " quadtree nodes printed");
     }
 
     /**

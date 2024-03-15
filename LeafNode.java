@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class LeafNode extends QuadTreeNode {
     private static final int MAX_POINTS = 1;
@@ -26,26 +27,24 @@ public class LeafNode extends QuadTreeNode {
     @Override
     public QuadTreeNode insert(Point point, int x, int y, int size) {
         for (Point existingPoint : points) {
-            if (existingPoint.equals(point)) {
-                // If the point already exists, just return this node.
+            if (existingPoint.getX() == point.getX() && existingPoint.getY() == point.getY()) {
+                // If the point exists in the same location, add the new point and return.
+                points.add(point);
                 return this;
             }
         }
-
-        if (points.size() < MAX_POINTS || (points.size() == MAX_POINTS && points.contains(point))) {
+        if (points.size() < MAX_POINTS) {
             points.add(point);
-            return this; // Return this leaf node if no splitting is needed.
+            return this;
         }
-
-        // If the node is full, create a new internal node and reinsert all points.
+        // If there's no room for the point in this node, split it into an InternalNode
+        // and try to insert the point into it
         InternalNode internalNode = new InternalNode();
         for (Point existingPoint : points) {
-            // Reinsert existing points into the new internal node.
-            internalNode = (InternalNode) internalNode.insert(existingPoint, x, y, size);
+            internalNode.insert(existingPoint, x, y, size);
         }
-        // Add the new point to the list after reinserting.
-        internalNode = (InternalNode) internalNode.insert(point, x, y, size);
-        return internalNode; // Return the new internal node after splitting.
+        internalNode.insert(point, x, y, size);
+        return internalNode;
     }
 
     /**

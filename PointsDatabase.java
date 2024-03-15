@@ -105,11 +105,11 @@ public class PointsDatabase {
 
         Point point = new Point(name, x, y);
         // Check for existing point with the same name
-        if (!skipList.search(name).isEmpty()) {
-            System.out.println("A point with name " + name
-                    + " already exists.");
-            return;
-        }
+        // if (!skipList.search(name).isEmpty()) {
+        // System.out.println("A point with name " + name
+        // + " already exists.");
+        // return;
+        // }
 
         // Create a KVPair object for the insertion
         KVPair<String, Point> pair = new KVPair<>(name, point);
@@ -117,6 +117,7 @@ public class PointsDatabase {
                                // SkipList.insert method
         quadTree.insert(point);
         System.out.println("Point inserted: " + point);
+        System.out.println(quadTree.numOfPoints());
     }
 
     /**
@@ -154,6 +155,7 @@ public class PointsDatabase {
         // Assuming PRQuadTree provides a method to directly find points by
         // coordinates
         @SuppressWarnings("unchecked")
+        // @SuppressWarnings("ClassCastException")
         List<Point> points = (List<Point>) quadTree.searchByCoordinates(x, y);
         if (points == null) {
             System.out.println("Point not found: (" + x + ", " + y + ")");
