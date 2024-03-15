@@ -35,3 +35,6 @@ Thumbs.db
 /bin/
 /PointsCommandProcessor.class
 /List.class
+/Boundary.class
+/EmptyNode.class
+/Quadrant.class
