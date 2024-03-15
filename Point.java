@@ -83,20 +83,4 @@ public class Point {
             return true;
         }
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (obj == null || obj.getClass() != this.getClass()) {
-            return false;
-        }
-        Point point = (Point) obj;
-        return name.equals(point.name) && x == point.x && y == point.y;
-    }
-
-    public boolean coordEquals(int x, int y) {
-        return this.x == x && this.y == y;
-    }
 }
